@@ -24,7 +24,7 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "First_Name", length = 50)
     private String firstName;
@@ -66,6 +66,44 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Token> tokens;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Location> locations;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<UserPost> userPosts;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<UserAbout> userAbouts;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<GroupMember> groupMemberList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<GroupMessage> groupMessageList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<GroupPost> groupPostList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sourceUser")
+    private List<UserFriend> sentFriendRequests;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetUser")
+    private List<UserFriend> receivedFriendRequests;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sourceUser")
+    private List<UserFollower> sentFollowerRequests;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetUser")
+    private List<UserFollower> receivedFollowerRequests;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sourceUser")
+    private List<UserMessage> sendMessageRequest;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetUser")
+    private List<UserMessage> receivedMessageRequests;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "createdBy")
+    private List<Group> createdByRequests;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "updatedBy")
+    private List<Group> updatedByRequests;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
