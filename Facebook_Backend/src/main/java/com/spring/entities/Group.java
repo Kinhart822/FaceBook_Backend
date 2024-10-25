@@ -15,21 +15,21 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "group")
+@Table(name = "groups")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "created_by", referencedColumnName = "id")
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updated_by", referencedColumnName = "id")
     private User updatedBy;
 
-    @Column(name = "title", nullable = false, length = 100)
+    @Column(name = "title", length = 100)
     private String title;
 
     @Column(name = "description", length = 500)

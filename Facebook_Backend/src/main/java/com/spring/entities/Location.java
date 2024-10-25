@@ -21,12 +21,8 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "location")
-    private List<UserAbout> userAbouts;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private UserAbout userAbout;
 
     @Column(name = "city", length = 100)
     private String city;

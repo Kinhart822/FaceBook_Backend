@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,11 +24,11 @@ public class UserPost {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(name = "message", nullable = false, length = 255)
-    private String message;
+    @Column(name = "message", nullable = false)
+    private String content;
 
     @Column(name = "date_created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -44,5 +45,8 @@ public class UserPost {
     @Column(name = "post_status")
     @Enumerated(EnumType.ORDINAL)
     private PostStatus postStatus;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost")
+    private List<Comment> comments;
 }
 

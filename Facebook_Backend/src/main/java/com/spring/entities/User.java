@@ -68,13 +68,13 @@ public class User implements UserDetails {
     private List<Token> tokens;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Location> locations;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserPost> userPosts;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<UserAbout> userAbouts;
+    @OneToMany(mappedBy = "user")
+    private List<UserLikePost> userLikePost;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private UserAbout userAbout;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<GroupMember> groupMemberList;

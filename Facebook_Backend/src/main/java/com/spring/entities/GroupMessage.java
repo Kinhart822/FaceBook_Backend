@@ -21,11 +21,11 @@ public class GroupMessage {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
     private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @Column(name = "message", length = 2000, nullable = false)

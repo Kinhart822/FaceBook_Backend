@@ -19,11 +19,11 @@ public class UserFriend {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "source_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "source_id", referencedColumnName = "id")
     private User sourceUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "target_id", referencedColumnName = "id")
     private User targetUser;
 
     @Column(name = "friend_type")

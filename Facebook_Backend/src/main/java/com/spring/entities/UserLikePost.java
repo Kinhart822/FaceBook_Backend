@@ -1,5 +1,7 @@
 package com.spring.entities;
 
+import com.spring.enums.ActionPerformed;
+import com.spring.enums.PostStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,29 +17,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "group_post")
-public class GroupPost {
+@Table(name = "user_like_post")
+public class UserLikePost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", referencedColumnName = "id")
-    private Group group;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(name = "message", length = 2000, nullable = false)
-    private String message;
-
-    @Column(name = "date_created", updatable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateCreated;
-
-    @Column(name = "date_updated")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateUpdated;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_post_id", referencedColumnName = "id")
+    private UserPost userPost;
 }
 

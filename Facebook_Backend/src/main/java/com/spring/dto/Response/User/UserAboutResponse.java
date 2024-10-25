@@ -1,17 +1,29 @@
-package com.spring.dto.Request.User;
+package com.spring.dto.Response.User;
 
 import com.spring.enums.EducationLevel;
-import lombok.Getter;
-import lombok.Setter;
+import com.spring.enums.Gender;
+import lombok.*;
+
+import java.util.Date;
 
 @Getter
 @Setter
-public class UserAboutRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class UserAboutResponse {
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+    private Date dateOfBirth;
+    private String userName;
+    private String gender;
     private String occupation;
     private String workPlace;
-    private EducationLevel educationLevel;
+    private String educationLevel;
     private String school;
-    private String dateOfJoining;
-    private Integer locationId;
+    private Date dateOfJoining;
+    private String locationName;
     private String relationshipStatus;
 }

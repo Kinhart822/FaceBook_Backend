@@ -22,9 +22,11 @@ public class UserAbout {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
     private User user;
+
+    @Column(name = "user_name", length = 50)
+    private String userName;
 
     @Column(name = "occupation", length = 100)
     private String occupation;
@@ -43,8 +45,8 @@ public class UserAbout {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfJoining;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "location_id")
     private Location location;
 
     @Column(name = "relation_ship", length = 50)

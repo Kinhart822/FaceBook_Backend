@@ -1,10 +1,7 @@
 package com.spring.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -13,19 +10,20 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
-@Table(name = "user_follower")
+@Table(name = "user_message")
 public class UserMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "source_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "source_id", referencedColumnName = "id")
     private User sourceUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "target_id", referencedColumnName = "id")
     private User targetUser;
 
     @Column(name = "message_content")

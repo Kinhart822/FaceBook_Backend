@@ -1,7 +1,6 @@
 package com.spring.repository;
 
 import com.spring.entities.User;
-import com.spring.enums.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,12 +11,64 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    User findUserById(Integer userId);
-
     Optional<User> findByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.email = :email")
     List<User> findUserByEmail(@Param("email") String email);
 
-    User findByUserType(Type type);
+    @Query(nativeQuery = true, value = """
+        SELECT u.first_name,
+            u.last_name,
+            u.email,
+            u.phone,
+            u.date_of_birth,
+            ab.user_name
+        FROM users u
+        JOIN user_about ab ON u.id = ab.user_id
+        WHERE ab.user_name LIKE CONCAT('%', :userName, '%')
+        AND u.id != :currentUserId  
+        LIMIT :limit OFFSET :offset
+        """)
+    List<Object[]> getAllUsersByUserName(
+            @Param("userName") String userName,
+            @Param("currentUserId") Integer currentUserId,
+            @Param("limit") Integer limit,
+            @Param("offset") Integer offset
+    );
+
+    @Query(nativeQuery = true, value = """
+        SELECT u.first_name,
+            u.last_name,
+            u.email,
+            u.phone,
+            u.date_of_birth
+        FROM users u
+        WHERE u.first_name LIKE CONCAT('%', :first_name, '%')
+        AND u.id != :currentUserId  
+        LIMIT :limit OFFSET :offset
+        """)
+    List<Object[]> getAllUsersByFirstName(
+            @Param("first_name") String firstName,
+            @Param("currentUserId") Integer currentUserId,
+            @Param("limit") Integer limit,
+            @Param("offset") Integer offset
+    );
+
+    @Query(nativeQuery = true, value = """
+        SELECT u.first_name,
+            u.last_name,
+            u.email,
+            u.phone,
+            u.date_of_birth
+        FROM users u
+        WHERE u.last_name LIKE CONCAT('%', :last_name, '%')
+        AND u.id != :currentUserId  
+        LIMIT :limit OFFSET :offset
+        """)
+    List<Object[]> getAllUsersByLastName(
+            @Param("last_name") String lastName,
+            @Param("currentUserId") Integer currentUserId,
+            @Param("limit") Integer limit,
+            @Param("offset") Integer offset
+    );
 }
