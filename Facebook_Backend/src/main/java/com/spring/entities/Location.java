@@ -21,7 +21,7 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "location")
     private UserAbout userAbout;
 
     @Column(name = "city", length = 100)

@@ -1,8 +1,10 @@
 package com.spring.enums;
 
 public enum ActionPerformed {
-    Created,
-    Updated,
+    CreatedPost,
+    CreatedDraftPost,
+    UpdatedPost,
+    UpdatedDraftPost,
     Deleted,
     Shared
 }

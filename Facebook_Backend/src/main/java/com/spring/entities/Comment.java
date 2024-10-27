@@ -2,6 +2,9 @@ package com.spring.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -15,10 +18,22 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
     @Column(name = "content")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_post_id", referencedColumnName = "id")
     private UserPost userPost;
+
+    @Column(name = "date_created", updatable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date dateCreated;
+
+    @Column(name = "date_updated")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date dateUpdated;
 }

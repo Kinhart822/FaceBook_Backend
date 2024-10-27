@@ -23,6 +23,7 @@ public class UserAbout {
     private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @Column(name = "user_name", length = 50)

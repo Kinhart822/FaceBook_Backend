@@ -46,7 +46,10 @@ public class UserPost {
     @Enumerated(EnumType.ORDINAL)
     private PostStatus postStatus;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost")
+    private List<Notification> notifications;
 }
 

@@ -1,6 +1,6 @@
 package com.spring.entities;
 
-import com.spring.enums.FriendType;
+import com.spring.enums.FriendRequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,9 +26,9 @@ public class UserFriend {
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private User targetUser;
 
-    @Column(name = "friend_type")
+    @Column(name = "friend_request_type")
     @Enumerated(EnumType.STRING)
-    private FriendType type;
+    private FriendRequestStatus status;
 
     @Column(name = "date_created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")

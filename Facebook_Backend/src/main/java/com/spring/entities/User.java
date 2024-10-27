@@ -73,7 +73,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<UserLikePost> userLikePost;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user")
     private UserAbout userAbout;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
@@ -84,6 +84,12 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<GroupPost> groupPostList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Comment> userCommentList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Notification> notifications;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "sourceUser")
     private List<UserFriend> sentFriendRequests;

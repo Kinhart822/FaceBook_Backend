@@ -1,15 +1,11 @@
 package com.spring.controller;
 
 import com.spring.config.JwtUtil;
-import com.spring.dto.Request.User.UserAboutRequest;
-import com.spring.dto.Request.User.UserFollowerRequest;
-import com.spring.dto.Request.User.UserMessageRequest;
+import com.spring.dto.Request.User.*;
 import com.spring.dto.Response.User.*;
 import com.spring.entities.User;
-import com.spring.service.UserAboutService;
-import com.spring.service.UserFollowerService;
-import com.spring.service.UserMessageService;
-import com.spring.service.UserService;
+import com.spring.enums.FriendRequestStatus;
+import com.spring.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +33,15 @@ public class UserController {
 
     @Autowired
     private UserMessageService userMessageService;
+
+    @Autowired
+    private UserFriendService userFriendService;
+
+    @Autowired
+    private UserPostService userPostService;
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping
     public ResponseEntity<String> sayHello(HttpServletRequest request) {
@@ -192,6 +197,132 @@ public class UserController {
     public ResponseEntity<List<UserMessageResponse>> getMessagesByTargetId(@RequestBody UserMessageRequest userMessageRequest) {
         List<UserMessageResponse> messages = userMessageService.findByTargetId(userMessageRequest);
         return ResponseEntity.ok(messages);
+    }
+
+    // TODO: UserFriend
+    @PostMapping("/friend/request")
+    public ResponseEntity<String> sendFriendRequest(@RequestBody UserFriendRequest userFriendRequest, HttpServletRequest request) {
+        Integer sourceId = jwtUtil.getUserIdFromToken(request);
+        userFriendService.sendFriendRequest(sourceId, userFriendRequest);
+        return ResponseEntity.ok("Friend request sent to user ID: " + userFriendRequest.getTargetUserId());
+    }
+
+    @PutMapping("/friend/accept")
+    public ResponseEntity<String> acceptFriendRequest(@RequestParam Integer sourceId, HttpServletRequest request) {
+        Integer targetId = jwtUtil.getUserIdFromToken(request);
+        userFriendService.acceptFriendRequest(sourceId, targetId);
+        return ResponseEntity.ok("Friend request accepted from user ID: " + sourceId);
+    }
+
+    @PutMapping("/friend/decline")
+    public ResponseEntity<String> declineFriendRequest(@RequestParam Integer sourceId, HttpServletRequest request) {
+        Integer targetId = jwtUtil.getUserIdFromToken(request);
+        userFriendService.declineFriendRequest(sourceId, targetId);
+        return ResponseEntity.ok("Friend request declined from user ID: " + sourceId);
+    }
+
+    @DeleteMapping("/friend/remove-friend")
+    public ResponseEntity<String> removeFriend(@RequestBody UserFriendRequest userFriendRequest, HttpServletRequest request) {
+        Integer sourceId = jwtUtil.getUserIdFromToken(request);
+        userFriendService.removeFriend(sourceId, userFriendRequest);
+        return ResponseEntity.ok("Friend removed successfully");
+    }
+
+    @GetMapping("/friend/requests/pending")
+    public ResponseEntity<List<UserFriendResponse>> getPendingFriendRequests(HttpServletRequest request) {
+        Integer targetId = jwtUtil.getUserIdFromToken(request);
+        List<UserFriendResponse> pendingRequests = userFriendService.getPendingFriendRequests(targetId, FriendRequestStatus.PENDING);
+        return ResponseEntity.ok(pendingRequests);
+    }
+
+    @GetMapping("/friend/requests/accepted")
+    public ResponseEntity<List<UserFriendResponse>> getAcceptedFriendRequests(HttpServletRequest request) {
+        Integer targetId = jwtUtil.getUserIdFromToken(request);
+        List<UserFriendResponse> acceptedRequests = userFriendService.getAcceptedFriendRequests(targetId, FriendRequestStatus.ACCEPTED);
+        return ResponseEntity.ok(acceptedRequests);
+    }
+
+    // TODO: UserPost
+    @PostMapping("/post/add")
+    public ResponseEntity<PostResponse> addPost(@RequestBody PostRequest postRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        PostResponse response = userPostService.addPost(userId, postRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/post/edit")
+    public ResponseEntity<PostResponse> editPost(@RequestBody PostRequest postRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        PostResponse response = userPostService.editPost(userId, postRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/post/delete")
+    public ResponseEntity<String> deletePost(@RequestBody PostRequest postRequest) {
+        userPostService.deletePost(postRequest);
+        return ResponseEntity.ok("Post deleted successfully");
+    }
+
+    @GetMapping("/postById")
+    public ResponseEntity<PostResponse> getPostById(@RequestBody PostRequest postRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        PostResponse response = userPostService.getPostById(userId, postRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/postsByUser")
+    public ResponseEntity<List<PostResponse>> getUserPosts(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<PostResponse> posts = userPostService.getUserPosts(userId);
+        return ResponseEntity.ok(posts);
+    }
+
+    //  TODO: Comment
+    @PostMapping("/comment/add")
+    public ResponseEntity<CommentResponse> addComment(@RequestBody CommentRequest commentRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        CommentResponse response = commentService.addComment(userId, commentRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/comment/edit")
+    public ResponseEntity<CommentResponse> editComment(@RequestBody CommentRequest commentRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        CommentResponse response = commentService.editComment(userId, commentRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/comment/delete/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable Integer commentId) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.ok("Comment deleted successfully");
+    }
+
+    @GetMapping("/comments/getCommentByPost")
+    public ResponseEntity<List<CommentResponse>> getCommentsByUserPostId(@RequestBody CommentRequest commentRequest) {
+        List<CommentResponse> comments = commentService.getCommentsByUserPostId(commentRequest);
+        return ResponseEntity.ok(comments);
+    }
+
+    @GetMapping("/comments/getCommentByUser")
+    public ResponseEntity<List<CommentResponse>> getCommentsByUserId(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<CommentResponse> comments = commentService.getCommentsByUserId(userId);
+        return ResponseEntity.ok(comments);
+    }
+
+    // TODO: UserLikePost
+    @PostMapping("/post/like")
+    public ResponseEntity<String> likePost(@RequestBody PostRequest postRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Boolean liked = userPostService.likePost(userId, postRequest);
+        return ResponseEntity.ok(liked ? "Post liked" : "Post unliked");
+    }
+
+    @GetMapping("/post/viewUsersLike")
+    public ResponseEntity<List<UserResponse>> getUsersWhoLikedPost(@RequestBody PostRequest postRequest) {
+        List<UserResponse> usersWhoLiked = userPostService.getUsersWhoLikedPost(postRequest);
+        return ResponseEntity.ok(usersWhoLiked);
     }
 }
 
