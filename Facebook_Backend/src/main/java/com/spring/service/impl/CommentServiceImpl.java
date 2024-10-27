@@ -3,9 +3,11 @@ package com.spring.service.impl;
 import com.spring.dto.Request.User.CommentRequest;
 import com.spring.dto.Response.User.CommentResponse;
 import com.spring.entities.Comment;
+import com.spring.entities.GroupPost;
 import com.spring.entities.User;
 import com.spring.entities.UserPost;
 import com.spring.repository.CommentRepository;
+import com.spring.repository.GroupPostRepository;
 import com.spring.repository.UserPostRepository;
 import com.spring.repository.UserRepository;
 import com.spring.service.CommentService;
@@ -22,6 +24,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private UserPostRepository userPostRepository;
+
+    @Autowired
+    private GroupPostRepository groupPostRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -48,6 +53,29 @@ public class CommentServiceImpl implements CommentService {
                 .content(comment.getContent())
                 .build();
     }
+    @Override
+    public CommentResponse addGroupComment(Integer userId, CommentRequest commentRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        GroupPost groupPost = groupPostRepository.findById(commentRequest.getGroupPostId())
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        Comment comment = Comment.builder()
+                .user(user)
+                .content(commentRequest.getContent())
+                .groupPost(groupPost)
+                .dateCreated(new Date())
+                .dateUpdated(new Date())
+                .build();
+
+        commentRepository.save(comment);
+
+        return CommentResponse.builder()
+                .name(user.getLastName() + " " + user.getFirstName())
+                .content(comment.getContent())
+                .build();
+    }
+
 
     @Override
     public CommentResponse editComment(Integer userId, CommentRequest commentRequest) {
@@ -90,6 +118,17 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentResponse> getCommentsByUserPostId(CommentRequest commentRequest) {
         List<Comment> comments = commentRepository.findByUserPostId(commentRequest.getUserPostId());
+        return comments.stream()
+                .map(comment -> CommentResponse.builder()
+                        .name(comment.getUser().getLastName() + " " + comment.getUser().getFirstName())
+                        .content(comment.getContent())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<CommentResponse> getCommentsByGroupPostId(CommentRequest commentRequest) {
+        List<Comment> comments = commentRepository.findByGroupPostId(commentRequest.getGroupPostId());
         return comments.stream()
                 .map(comment -> CommentResponse.builder()
                         .name(comment.getUser().getLastName() + " " + comment.getUser().getFirstName())

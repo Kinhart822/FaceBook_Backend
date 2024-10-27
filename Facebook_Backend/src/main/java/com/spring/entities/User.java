@@ -80,9 +80,6 @@ public class User implements UserDetails {
     private List<GroupMember> groupMemberList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<GroupMessage> groupMessageList;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<GroupPost> groupPostList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
@@ -110,6 +107,11 @@ public class User implements UserDetails {
     private List<Group> createdByRequests;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "updatedBy")
     private List<Group> updatedByRequests;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sourceUser")
+    private List<GroupMessage> sendGroupMessageRequest;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetUser")
+    private List<GroupMessage> receivedGroupMessageRequests;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,5 +1,7 @@
 package com.spring.entities;
 
+import com.spring.enums.ActionPerformed;
+import com.spring.enums.PostStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,5 +41,22 @@ public class GroupPost {
     @Column(name = "date_updated")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
+
+    @Column(name = "action_performed")
+    @Enumerated(EnumType.ORDINAL)
+    private ActionPerformed actionPerformed;
+
+    @Column(name = "post_status")
+    @Enumerated(EnumType.ORDINAL)
+    private PostStatus postStatus;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost")
+    private List<Notification> notifications;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost")
+    private List<UserLikePost> userLikePosts;
 }
 

@@ -1,10 +1,7 @@
 package com.spring.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -14,6 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "groups")
 public class Group {
@@ -34,12 +32,6 @@ public class Group {
 
     @Column(name = "description", length = 500)
     private String description;
-
-    @Column(name = "profile", length = 500)
-    private String profile;
-
-    @Column(name = "content", length = 2000)
-    private String content;
 
     @Column(name = "date_created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")

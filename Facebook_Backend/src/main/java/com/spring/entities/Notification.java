@@ -25,6 +25,10 @@ public class Notification {
     @JoinColumn(name = "user_post_id", referencedColumnName = "id")
     private UserPost userPost;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_post_id", referencedColumnName = "id")
+    private GroupPost groupPost;
+
     @Column(name = "message")
     private String message;
 

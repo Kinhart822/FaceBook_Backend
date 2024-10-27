@@ -51,5 +51,8 @@ public class UserPost {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost")
     private List<Notification> notifications;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost")
+    private List<UserLikePost> userLikePosts;
 }
 

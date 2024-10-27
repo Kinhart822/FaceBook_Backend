@@ -9,4 +9,5 @@ public class CommentRequest {
     private String content;
     private Integer commentId;
     private Integer userPostId;
+    private Integer groupPostId;
 }

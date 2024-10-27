@@ -1,16 +1,14 @@
 package com.spring.service.impl;
 
-import com.spring.dto.Request.User.PostRequest;
-import com.spring.dto.Response.User.PostResponse;
+import com.spring.dto.Request.Group.GroupPostRequest;
+import com.spring.dto.Response.Group.GroupPostResponse;
 import com.spring.dto.Response.User.UserResponse;
 import com.spring.entities.*;
 import com.spring.enums.ActionPerformed;
 import com.spring.enums.PostStatus;
-import com.spring.repository.UserLikePostRepository;
-import com.spring.repository.UserPostRepository;
-import com.spring.repository.UserRepository;
+import com.spring.repository.*;
+import com.spring.service.GroupPostService;
 import com.spring.service.NotificationService;
-import com.spring.service.UserPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +17,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserPostServiceImpl implements UserPostService {
+public class GroupPostImpl implements GroupPostService {
     @Autowired
-    private UserPostRepository userPostRepository;
+    private GroupRepository groupRepository;
+
+    @Autowired
+    private GroupPostRepository groupPostRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -33,91 +34,94 @@ public class UserPostServiceImpl implements UserPostService {
     private NotificationService notificationService;
 
     @Override
-    public PostResponse addPost(Integer userId, PostRequest postRequest) {
+    public GroupPostResponse addPost(Integer userId, GroupPostRequest groupPostRequest) {
+        Group selectedGroup = groupRepository.findById(groupPostRequest.getSelectedGroupId())
+                .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        UserPost newPost = new UserPost();
+        GroupPost newPost = new GroupPost();
+        newPost.setGroup(selectedGroup);
         newPost.setUser(user);
-        newPost.setContent(postRequest.getContent());
+        newPost.setMessage(groupPostRequest.getContent());
         newPost.setDateCreated(new Date());
         newPost.setDateUpdated(new Date());
-        newPost.setPostStatus(postRequest.getPostStatus());
-        if (postRequest.getPostStatus() == PostStatus.Draft){
+        newPost.setPostStatus(groupPostRequest.getPostStatus());
+        if (groupPostRequest.getPostStatus() == PostStatus.Draft){
             newPost.setActionPerformed(ActionPerformed.CreatedDraftPost);
-        } else if (postRequest.getPostStatus() == PostStatus.Published){
+        } else if (groupPostRequest.getPostStatus() == PostStatus.Published){
             newPost.setActionPerformed(ActionPerformed.CreatedPost);
         }
-        userPostRepository.save(newPost);
+        groupPostRepository.save(newPost);
 
-        return PostResponse.builder()
+        return GroupPostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
-                .content(newPost.getContent())
-                .postStatus(newPost.getPostStatus().toString())
+                .content(groupPostRequest.getContent())
+                .postStatus(groupPostRequest.getPostStatus().toString())
                 .actionPerformed(newPost.getActionPerformed().toString())
-                .build();
-    }
+                .build();    }
 
     @Override
-    public PostResponse editPost(Integer userId, PostRequest postRequest) {
+    public GroupPostResponse editPost(Integer userId, GroupPostRequest groupPostRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        UserPost existingPost = userPostRepository.findById(postRequest.getPostId())
+        GroupPost existingPost = groupPostRepository.findById(groupPostRequest.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
         if (!existingPost.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("Unauthorized edit attempt");
         }
 
-        existingPost.setContent(postRequest.getContent());
+        existingPost.setMessage(groupPostRequest.getContent());
         existingPost.setDateUpdated(new Date());
-        if (postRequest.getPostStatus() == PostStatus.Draft){
+        if (groupPostRequest.getPostStatus() == PostStatus.Draft){
             existingPost.setActionPerformed(ActionPerformed.UpdatedDraftPost);
-        } else if (postRequest.getPostStatus() == PostStatus.Published){
+        } else if (groupPostRequest.getPostStatus() == PostStatus.Published){
             existingPost.setActionPerformed(ActionPerformed.UpdatedPost);
         }
-        userPostRepository.save(existingPost);
+        groupPostRepository.save(existingPost);
 
-        return PostResponse.builder()
+        return GroupPostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
-                .content(postRequest.getContent())
-                .postStatus(postRequest.getPostStatus().toString())
+                .content(groupPostRequest.getContent())
+                .postStatus(groupPostRequest.getPostStatus().toString())
                 .actionPerformed(existingPost.getActionPerformed().toString())
                 .build();
     }
 
     @Override
-    public void deletePost(PostRequest postRequest) {
-        UserPost post = userPostRepository.findById(postRequest.getPostId())
+    public void deletePost(GroupPostRequest groupPostRequest) {
+        GroupPost post = groupPostRepository.findById(groupPostRequest.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
-        userPostRepository.delete(post);
+        groupPostRepository.delete(post);
     }
 
     @Override
-    public PostResponse getPostById(Integer userId, PostRequest postRequest) {
+    public GroupPostResponse getPostById(Integer userId, GroupPostRequest groupPostRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        UserPost post = userPostRepository.findById(postRequest.getPostId())
+        GroupPost post = groupPostRepository.findById(groupPostRequest.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
-        return PostResponse.builder()
+        return GroupPostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
-                .content(post.getContent())
+                .content(post.getMessage())
                 .postStatus(post.getPostStatus().toString())
                 .actionPerformed(post.getActionPerformed().toString())
                 .build();
     }
 
     @Override
-    public List<PostResponse> getUserPosts(Integer userId) {
+    public List<GroupPostResponse> getUserPosts(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        List<UserPost> posts = userPostRepository.findByUserId(userId);
+        List<GroupPost> posts = groupPostRepository.findByUserId(userId);
         return posts.stream()
-                .map(post -> PostResponse.builder()
+                .map(post -> GroupPostResponse.builder()
                         .name(user.getLastName() + " " + user.getFirstName())
-                        .content(post.getContent())
+                        .content(post.getMessage())
                         .postStatus(post.getPostStatus().toString())
                         .actionPerformed(post.getActionPerformed().toString())
                         .build()
@@ -126,14 +130,30 @@ public class UserPostServiceImpl implements UserPostService {
     }
 
     @Override
-    public Boolean likePost(Integer userId, PostRequest postRequest) {
+    public List<GroupPostResponse> getPostsByGroupId(Integer userId, GroupPostRequest groupPostRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        List<GroupPost> posts = groupPostRepository.findByGroupId(groupPostRequest.getSelectedGroupId());
+        return posts.stream()
+                .map(post -> GroupPostResponse.builder()
+                        .name(user.getLastName() + " " + user.getFirstName())
+                        .content(post.getMessage())
+                        .postStatus(post.getPostStatus().toString())
+                        .actionPerformed(post.getActionPerformed().toString())
+                        .build()
+                )
+                .toList();
+    }
+
+    @Override
+    public Boolean likePost(Integer userId, GroupPostRequest groupPostRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        UserPost post = userPostRepository.findById(postRequest.getPostId())
+        GroupPost post = groupPostRepository.findById(groupPostRequest.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
-        Optional<UserLikePost> existingLike = userLikePostRepository.findByUserAndUserPost(user, post);
+        Optional<UserLikePost> existingLike = userLikePostRepository.findByUserAndGroupPost(user, post);
 
         if (existingLike.isPresent()) {
             userLikePostRepository.delete(existingLike.get());
@@ -141,13 +161,13 @@ public class UserPostServiceImpl implements UserPostService {
         } else {
             UserLikePost newLike = new UserLikePost();
             newLike.setUser(user);
-            newLike.setUserPost(post);
+            newLike.setGroupPost(post);
             userLikePostRepository.save(newLike);
 
             // cannot send it to yourself
             if (!post.getUser().getId().equals(userId)) {
                 String message = user.getLastName() + " " + user.getFirstName() + " liked your post!";
-                notificationService.sendNotification(userId, postRequest.getPostId(), message);
+                notificationService.sendNotification(userId, groupPostRequest.getPostId(), message);
                 return true; // Like
             }
 
@@ -156,11 +176,11 @@ public class UserPostServiceImpl implements UserPostService {
     }
 
     @Override
-    public List<UserResponse> getUsersWhoLikedPost(PostRequest postRequest) {
-        UserPost post = userPostRepository.findById(postRequest.getPostId())
+    public List<UserResponse> getUsersWhoLikedPost(GroupPostRequest groupPostRequest) {
+        GroupPost post = groupPostRepository.findById(groupPostRequest.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
-        List<UserLikePost> likes = userLikePostRepository.findByUserPost(post);
+        List<UserLikePost> likes = userLikePostRepository.findByGroupPost(post);
 
         return likes.stream()
                 .map(like -> {
