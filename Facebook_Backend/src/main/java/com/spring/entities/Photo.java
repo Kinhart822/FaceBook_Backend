@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
-@Table(name = "table")
+@Table(name = "photo")
 @Getter
 @Setter
 public class Photo implements Serializable {
