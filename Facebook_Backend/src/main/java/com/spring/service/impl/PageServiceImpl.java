@@ -2,6 +2,8 @@ package com.spring.service.impl;
 
 import com.spring.dto.Request.PageRequest;
 import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.Response.User.UserProjection;
+import com.spring.dto.Response.User.UserResponse;
 import com.spring.entities.Page;
 import com.spring.repository.PageFollowerRepository;
 import com.spring.repository.PageRepository;
@@ -27,6 +29,7 @@ public class PageServiceImpl implements PageService {
 
     public CommonResponse createPage(Integer userId, PageRequest pageRequest) {
         Page page = new Page();
+        page.setName(pageRequest.getName());
         page.setCategoryId(pageRequest.getCategoryId());
         page.setOwnedBy(userId);
         page.setAvatarUrl(pageRequest.getAvatarUrl());
@@ -46,6 +49,7 @@ public class PageServiceImpl implements PageService {
     }
     public CommonResponse updatePage(Integer id, PageRequest pageRequest) {
         Page page = this.findById(id);
+        page.setName(pageRequest.getName());
         page.setCategoryId(pageRequest.getCategoryId());
         page.setAvatarUrl(pageRequest.getAvatarUrl());
         page.setBackgroundUrl(pageRequest.getBackgroundUrl());
@@ -66,5 +70,11 @@ public class PageServiceImpl implements PageService {
     }
     public Integer countLikesByPageId(Integer id) {
         return pageFollowerRepository.countLikesByPageId(id);
+    }
+    public List<UserProjection> getPageFollowers(Integer id) {
+        return pageFollowerRepository.getPageFollowers(id);
+    }
+    public List<UserProjection> getPageLikers(Integer id) {
+        return pageFollowerRepository.getPageLikers(id);
     }
 }

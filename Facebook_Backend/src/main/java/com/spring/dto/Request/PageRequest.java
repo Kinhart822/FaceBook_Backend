@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class PageRequest {
+    private String name;
     private Integer categoryId;
     private String avatarUrl;
     private String backgroundUrl;
