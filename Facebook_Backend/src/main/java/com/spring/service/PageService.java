@@ -3,7 +3,6 @@ package com.spring.service;
 import com.spring.dto.Request.PageRequest;
 import com.spring.dto.Response.CommonResponse;
 import com.spring.dto.Response.User.UserProjection;
-import com.spring.dto.Response.User.UserResponse;
 import com.spring.entities.Page;
 
 import java.util.List;

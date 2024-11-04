@@ -3,7 +3,6 @@ package com.spring.service.impl;
 import com.spring.dto.Request.PageRequest;
 import com.spring.dto.Response.CommonResponse;
 import com.spring.dto.Response.User.UserProjection;
-import com.spring.dto.Response.User.UserResponse;
 import com.spring.entities.Page;
 import com.spring.repository.PageFollowerRepository;
 import com.spring.repository.PageRepository;

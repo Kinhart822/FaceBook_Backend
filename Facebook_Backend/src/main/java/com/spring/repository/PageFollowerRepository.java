@@ -1,7 +1,6 @@
 package com.spring.repository;
 
 import com.spring.dto.Response.User.UserProjection;
-import com.spring.dto.Response.User.UserResponse;
 import com.spring.entities.PageFollower;
 import com.spring.entities.PageFollowerPK;
 import org.springframework.data.jpa.repository.JpaRepository;

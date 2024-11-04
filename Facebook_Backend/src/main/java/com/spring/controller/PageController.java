@@ -4,7 +4,6 @@ import com.spring.config.JwtUtil;
 import com.spring.dto.Request.PageRequest;
 import com.spring.dto.Response.CommonResponse;
 import com.spring.dto.Response.User.UserProjection;
-import com.spring.dto.Response.User.UserResponse;
 import com.spring.entities.Page;
 import com.spring.service.PageService;
 import com.spring.service.impl.PageFollowerServiceImpl;

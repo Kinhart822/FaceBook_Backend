@@ -2,7 +2,6 @@ package com.spring.service;
 
 import com.spring.dto.Response.CommonResponse;
 import com.spring.entities.AlbumPhoto;
-import com.spring.entities.AlbumPhotoPK;
 
 import java.util.List;
 
