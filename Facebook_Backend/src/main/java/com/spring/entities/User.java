@@ -56,6 +56,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.ORDINAL)
     private Type userType;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @Column(name = "Date_Created", updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateCreated;

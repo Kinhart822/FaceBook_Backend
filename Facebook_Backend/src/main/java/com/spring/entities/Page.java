@@ -17,6 +17,8 @@ public class Page implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "name")
+    private String name;
     @Column(name = "category_id")
     private Integer categoryId;
     @Column(name = "owned_by")
