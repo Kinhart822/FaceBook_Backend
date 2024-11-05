@@ -6,14 +6,14 @@ import com.spring.dto.Response.User.UserResponse;
 import com.spring.entities.*;
 import com.spring.enums.ActionPerformed;
 import com.spring.enums.PostStatus;
-import com.spring.repository.UserLikePostRepository;
-import com.spring.repository.UserPostRepository;
-import com.spring.repository.UserRepository;
+import com.spring.repository.*;
 import com.spring.service.NotificationService;
 import com.spring.service.UserPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +30,9 @@ public class UserPostServiceImpl implements UserPostService {
     private UserLikePostRepository userLikePostRepository;
 
     @Autowired
+    private PhotoRepository photoRepository;
+
+    @Autowired
     private NotificationService notificationService;
 
     @Override
@@ -43,16 +46,31 @@ public class UserPostServiceImpl implements UserPostService {
         newPost.setDateCreated(new Date());
         newPost.setDateUpdated(new Date());
         newPost.setPostStatus(postRequest.getPostStatus());
-        if (postRequest.getPostStatus() == PostStatus.Draft){
-            newPost.setActionPerformed(ActionPerformed.CreatedDraftPost);
-        } else if (postRequest.getPostStatus() == PostStatus.Published){
-            newPost.setActionPerformed(ActionPerformed.CreatedPost);
+        newPost.setActionPerformed(postRequest.getPostStatus() == PostStatus.Draft
+                ? ActionPerformed.CreatedDraftPost
+                : ActionPerformed.CreatedPost);
+
+        newPost = userPostRepository.save(newPost);
+
+        List<Photo> photos = new ArrayList<>();
+        if (postRequest.getImageUrl() != null) {
+            for (String imageUrl : postRequest.getImageUrl()) {
+                Photo photo = new Photo();
+                photo.setUserId(userId);
+                photo.setImageUrl(imageUrl);
+                photo.setUploadDate(Instant.now());
+                photo.setUserPost(newPost);
+                photos.add(photo);
+                photoRepository.save(photo);
+            }
         }
-        userPostRepository.save(newPost);
+
+        newPost.setPhotos(photos);
 
         return PostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
                 .content(newPost.getContent())
+                .imageUrl(postRequest.getImageUrl())
                 .postStatus(newPost.getPostStatus().toString())
                 .actionPerformed(newPost.getActionPerformed().toString())
                 .build();
@@ -76,12 +94,32 @@ public class UserPostServiceImpl implements UserPostService {
         } else if (postRequest.getPostStatus() == PostStatus.Published){
             existingPost.setActionPerformed(ActionPerformed.UpdatedPost);
         }
+
         userPostRepository.save(existingPost);
 
+        photoRepository.deleteByUserPost(existingPost);
+
+        List<Photo> photos = new ArrayList<>();
+        if (postRequest.getImageUrl() != null) {
+            for (String imageUrl : postRequest.getImageUrl()) {
+                Photo photo = new Photo();
+                photo.setUserId(userId);
+                photo.setImageUrl(imageUrl);
+                photo.setUploadDate(Instant.now());
+                photo.setUserPost(existingPost);
+                photos.add(photo);
+                photoRepository.save(photo);
+            }
+        }
+
+        existingPost.setPhotos(photos);
+
+        // Trả về PostResponse
         return PostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
-                .content(postRequest.getContent())
-                .postStatus(postRequest.getPostStatus().toString())
+                .content(existingPost.getContent())
+                .imageUrl(postRequest.getImageUrl())
+                .postStatus(existingPost.getPostStatus().toString())
                 .actionPerformed(existingPost.getActionPerformed().toString())
                 .build();
     }
@@ -104,6 +142,7 @@ public class UserPostServiceImpl implements UserPostService {
         return PostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
                 .content(post.getContent())
+                .imageUrl(post.getPhotos().stream().map(Photo::getImageUrl).toList())
                 .postStatus(post.getPostStatus().toString())
                 .actionPerformed(post.getActionPerformed().toString())
                 .build();
@@ -118,6 +157,7 @@ public class UserPostServiceImpl implements UserPostService {
                 .map(post -> PostResponse.builder()
                         .name(user.getLastName() + " " + user.getFirstName())
                         .content(post.getContent())
+                        .imageUrl(post.getPhotos().stream().map(Photo::getImageUrl).toList())
                         .postStatus(post.getPostStatus().toString())
                         .actionPerformed(post.getActionPerformed().toString())
                         .build()
@@ -167,6 +207,20 @@ public class UserPostServiceImpl implements UserPostService {
                     User user = like.getUser();
                     return new UserResponse(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber(), user.getGender().toString());
                 })
+                .toList();
+    }
+
+    @Override
+    public List<String> getAllImageUrlByUserPostAndPostStatus(PostRequest postRequest) {
+        UserPost post = userPostRepository.findById(postRequest.getPostId())
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        if (!post.getPostStatus().equals(postRequest.getPostStatus())) {
+            throw new IllegalArgumentException("Post status does not match");
+        }
+
+        return post.getPhotos().stream()
+                .map(Photo::getImageUrl)
                 .toList();
     }
 }

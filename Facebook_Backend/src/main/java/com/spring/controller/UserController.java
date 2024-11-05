@@ -277,6 +277,12 @@ public class UserController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/imagesByUserPostAndPostStatus")
+    public ResponseEntity<List<String>> getImageUrls(@RequestBody PostRequest postRequest) {
+        List<String> posts = userPostService.getAllImageUrlByUserPostAndPostStatus(postRequest);
+        return ResponseEntity.ok(posts);
+    }
+
     //  TODO: Comment
     @PostMapping("/comment/add")
     public ResponseEntity<CommentResponse> addComment(@RequestBody CommentRequest commentRequest, HttpServletRequest request) {

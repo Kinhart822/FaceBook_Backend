@@ -26,4 +26,5 @@ public class UserAboutResponse {
     private Date dateOfJoining;
     private String locationName;
     private String relationshipStatus;
+    private String imageUrl;
 }

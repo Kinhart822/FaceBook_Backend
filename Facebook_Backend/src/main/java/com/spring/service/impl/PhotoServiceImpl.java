@@ -27,7 +27,6 @@ public class PhotoServiceImpl implements PhotoService {
     public CommonResponse createPhoto(Integer userId, PhotoRequest photoRequest) {
         Photo photo = new Photo();
         photo.setUserId(userId);
-        photo.setCaption(photoRequest.getCaption());
         photo.setImageUrl(photoRequest.getImageUrl());
         photo.setUploadDate(Instant.now());
         photoRepository.save(photo);
@@ -44,7 +43,6 @@ public class PhotoServiceImpl implements PhotoService {
 
     public CommonResponse updatePhoto(Integer id, PhotoRequest photoRequest) {
         Photo photo = this.findById(id);
-        photo.setCaption(photoRequest.getCaption());
         photo.setImageUrl(photoRequest.getImageUrl());
         photoRepository.save(photo);
         return CommonResponse.success();

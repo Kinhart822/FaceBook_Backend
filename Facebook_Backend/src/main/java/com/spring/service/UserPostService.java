@@ -14,4 +14,5 @@ public interface UserPostService {
     List<PostResponse> getUserPosts(Integer userId);
     Boolean likePost(Integer userId, PostRequest postRequest);
     List<UserResponse> getUsersWhoLikedPost(PostRequest postRequest);
+    List<String> getAllImageUrlByUserPostAndPostStatus(PostRequest postRequest);
 }

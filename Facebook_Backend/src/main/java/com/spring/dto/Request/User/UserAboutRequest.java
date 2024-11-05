@@ -30,4 +30,5 @@ public class UserAboutRequest {
     private String state;
     private String street;
     private String region;
+    private String imageUrl;
 }

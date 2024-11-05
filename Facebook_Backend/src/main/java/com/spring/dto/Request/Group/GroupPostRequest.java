@@ -10,5 +10,7 @@ public class GroupPostRequest {
     private Integer selectedGroupId;
     private Integer postId;
     private String content;
+    private String imageUrl;
+    private String videoUrl;
     private PostStatus postStatus;
 }

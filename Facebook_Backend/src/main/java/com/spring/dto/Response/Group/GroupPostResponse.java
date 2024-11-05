@@ -10,6 +10,8 @@ import lombok.*;
 public class GroupPostResponse {
     private String name;
     private String content;
+    private String imageUrl;
+    private String videoUrl;
     private String postStatus;
     private String actionPerformed;
 }

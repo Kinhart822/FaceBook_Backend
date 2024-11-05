@@ -2,6 +2,8 @@ package com.spring.dto.Response.User;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -10,6 +12,7 @@ import lombok.*;
 public class PostResponse {
     private String name;
     private String content;
+    private List<String> imageUrl;
     private String postStatus;
     private String actionPerformed;
 }

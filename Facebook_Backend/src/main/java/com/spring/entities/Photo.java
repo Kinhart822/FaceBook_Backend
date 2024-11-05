@@ -17,13 +17,14 @@ import java.time.Instant;
 public class Photo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(name = "user_id")
     private Integer userId;
-    @Column(name = "caption")
-    private String caption;
+
     @Column(name = "image_url")
     private String imageUrl;
     @CreatedDate
