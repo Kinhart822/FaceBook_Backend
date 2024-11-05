@@ -9,5 +9,6 @@ import lombok.Setter;
 public class PostRequest {
     private Integer postId;
     private String content;
+
     private PostStatus postStatus;
 }

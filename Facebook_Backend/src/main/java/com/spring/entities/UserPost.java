@@ -49,10 +49,16 @@ public class UserPost {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost", cascade = CascadeType.ALL)
     private List<Notification> notifications;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost", cascade = CascadeType.ALL)
     private List<UserLikePost> userLikePosts;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost", cascade = CascadeType.ALL)
+    private List<Photo> photos;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost", cascade = CascadeType.ALL)
+    private List<Video> videoList;
 }
 

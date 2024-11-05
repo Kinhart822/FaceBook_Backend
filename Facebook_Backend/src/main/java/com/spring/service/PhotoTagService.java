@@ -1,7 +1,6 @@
 package com.spring.service;
 
 import com.spring.dto.Response.CommonResponse;
-import com.spring.entities.PhotoTag;
 
 import java.util.List;
 

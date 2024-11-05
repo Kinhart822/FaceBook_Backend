@@ -1,8 +1,6 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Response.CommonResponse;
-import com.spring.entities.PhotoTag;
-import com.spring.entities.PhotoTagPK;
 import com.spring.repository.PhotoTagRepository;
 import com.spring.service.PhotoTagService;
 import lombok.RequiredArgsConstructor;

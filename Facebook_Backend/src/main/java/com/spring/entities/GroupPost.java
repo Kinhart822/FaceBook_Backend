@@ -53,10 +53,16 @@ public class GroupPost {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost", cascade = CascadeType.ALL)
     private List<Notification> notifications;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost", cascade = CascadeType.ALL)
     private List<UserLikePost> userLikePosts;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost", cascade = CascadeType.ALL)
+    private List<Photo> photos;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost", cascade = CascadeType.ALL)
+    private List<Video> videoList;
 }
 
