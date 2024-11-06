@@ -2,6 +2,8 @@ package com.spring.service;
 
 import com.spring.dto.Request.Group.GroupRequest;
 import com.spring.dto.Response.Group.GroupResponse;
+import com.spring.dto.Response.Group.SearchGroupByTitleResponse;
+
 import java.util.List;
 
 public interface GroupService {
@@ -10,5 +12,9 @@ public interface GroupService {
     List<GroupResponse> getAllGroups();
     GroupResponse updateGroup(Integer userId, GroupRequest groupRequest);
     void deleteGroup(Integer id);
+
+    // Search Group
+    List<SearchGroupByTitleResponse> getGroupByTitle(String title, Integer limit, Integer offset);
+
 }
 

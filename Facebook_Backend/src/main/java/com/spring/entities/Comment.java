@@ -30,6 +30,10 @@ public class Comment {
     private UserPost userPost;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "video_post_id", referencedColumnName = "id")
+    private VideoPost videoPost;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_post_id", referencedColumnName = "id")
     private GroupPost groupPost;
 

@@ -3,14 +3,17 @@ package com.spring.service.impl;
 import com.spring.dto.Request.User.UserAboutRequest;
 import com.spring.dto.Response.User.UserAboutResponse;
 import com.spring.entities.Location;
+import com.spring.entities.Photo;
 import com.spring.entities.UserAbout;
 import com.spring.repository.LocationRepository;
+import com.spring.repository.PhotoRepository;
 import com.spring.repository.UserAboutRepository;
 import com.spring.repository.UserRepository;
 import com.spring.service.UserAboutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +29,9 @@ public class UserAboutServiceImpl implements UserAboutService {
     @Autowired
     private LocationRepository locationRepository;
 
+    @Autowired
+    private PhotoRepository photoRepository;
+
     private UserAboutResponse mapToResponse(UserAbout userAbout) {
         return UserAboutResponse.builder()
                 .firstName(userAbout.getUser().getFirstName())
@@ -37,13 +43,16 @@ public class UserAboutServiceImpl implements UserAboutService {
                 .userName(userAbout.getUserName())
                 .occupation(userAbout.getOccupation())
                 .workPlace(userAbout.getWorkPlace())
-                .educationLevel(userAbout.getEducationLevel().toString())
+                .educationLevel(userAbout.getEducationLevel() != null ? userAbout.getEducationLevel().toString() : null)
                 .school(userAbout.getSchool())
                 .dateOfJoining(userAbout.getDateOfJoining())
                 .locationName(userAbout.getLocation() != null
                         ? userAbout.getLocation().getCity() + ", " + userAbout.getLocation().getCountry()
                         : null)
-                .relationshipStatus(userAbout.getRelationship().toString())
+                .relationshipStatus(userAbout.getRelationship() != null ? userAbout.getRelationship().toString() : null)
+                .backgroundUrl(userAbout.getBackground() != null ? userAbout.getBackground().getImageUrl() : null)
+                .profilePhotoUrl(userAbout.getProfilePhoto() != null ? userAbout.getProfilePhoto().getImageUrl() : null)
+                .avatarPhotoUrl(userAbout.getAvatar() != null ? userAbout.getAvatar().getImageUrl() : null)
                 .build();
     }
 
@@ -133,25 +142,45 @@ public class UserAboutServiceImpl implements UserAboutService {
                 }
             }
         }
+        if (userAboutRequest.getBackgroundUrl() != null) {
+            if (userAbout.getBackground() != null) {
+                photoRepository.deleteById(userAbout.getBackground().getId());
+            }
+            Photo photo = new Photo();
+            photo.setUserId(userId);
+            photo.setImageUrl(userAboutRequest.getBackgroundUrl());
+            photo.setUploadDate(Instant.now());
+            photo.setBackground(userAbout);
+            photoRepository.save(photo);
+            userAbout.setBackground(photo);
+        }
+        if (userAboutRequest.getAvatarPhotoUrl() != null) {
+            if (userAbout.getAvatar() != null) {
+                photoRepository.deleteById(userAbout.getAvatar().getId());
+            }
+            Photo avatarPhoto = new Photo();
+            avatarPhoto.setUserId(userId);
+            avatarPhoto.setImageUrl(userAboutRequest.getAvatarPhotoUrl());
+            avatarPhoto.setUploadDate(Instant.now());
+            avatarPhoto.setAvatar(userAbout);
+            photoRepository.save(avatarPhoto);
+            userAbout.setAvatar(avatarPhoto);
+            userRepository.save(userAbout.getUser());
+        }
+        if (userAboutRequest.getProfilePhotoUrl() != null) {
+            if (userAbout.getProfilePhoto() != null) {
+                photoRepository.deleteById(userAbout.getProfilePhoto().getId());
+            }
+            Photo profilePhoto = new Photo();
+            profilePhoto.setUserId(userId);
+            profilePhoto.setImageUrl(userAboutRequest.getProfilePhotoUrl());
+            profilePhoto.setUploadDate(Instant.now());
+            profilePhoto.setProfilePhoto(userAbout);
+            photoRepository.save(profilePhoto);
+            userAbout.setProfilePhoto(profilePhoto);
+        }
 
         UserAbout savedUserAbout = userAboutRepository.save(userAbout);
         return mapToResponse(savedUserAbout);
-    }
-
-
-    @Override
-    public void deleteById(Integer id) {
-        UserAbout userAbout = userAboutRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("UserAbout not found with id: " + id));
-
-        if (userAbout.getLocation() != null) {
-            userAbout.setLocation(null);
-            userAboutRepository.save(userAbout);
-        }
-
-        userAbout.setUser(null);
-        userAboutRepository.save(userAbout);
-
-        userAboutRepository.deleteById(id);
     }
 }

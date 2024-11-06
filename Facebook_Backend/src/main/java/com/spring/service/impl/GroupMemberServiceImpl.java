@@ -42,6 +42,13 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         User member = userRepository.findById(groupMemberRequest.getSelectedMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
+        boolean isMemberExists = groupMemberRepository.existsByGroupIdAndUserId(
+                groupMemberRequest.getSelectedGroupId(), groupMemberRequest.getSelectedMemberId());
+
+        if (isMemberExists) {
+            throw new IllegalArgumentException("Member is already in the group");
+        }
+
         Role selectedRole = roleRepository.findByTitle(groupMemberRequest.getRoleTitle());
         if (selectedRole == null) {
             selectedRole = Role.builder()
@@ -62,26 +69,38 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         addMember.setNotes(groupMemberRequest.getNotes());
         groupMemberRepository.save(addMember);
 
+        String avatarImage = null;
+        if (member.getUserAbout() != null && member.getUserAbout().getAvatar() != null) {
+            avatarImage = member.getUserAbout().getAvatar().getImageUrl();
+        }
+
         return GroupMemberResponse.builder()
                 .title(selectedGroup.getTitle())
                 .description(selectedGroup.getDescription())
+                .avatarImage(avatarImage)
                 .notes(groupMemberRequest.getNotes())
                 .build();
     }
 
-    
     @Override
     public List<GroupMemberResponse> getMembersByGroupId(GroupMemberRequest groupMemberRequest) {
         Group selectedGroup = groupRepository.findById(groupMemberRequest.getSelectedGroupId())
                 .orElseThrow(() -> new IllegalArgumentException("Group not found"));
 
-        List<GroupMember>groupMemberList = groupMemberRepository.findByGroupId(groupMemberRequest.getSelectedGroupId());
+        List<GroupMember> groupMemberList = groupMemberRepository.findByGroupId(groupMemberRequest.getSelectedGroupId());
         return groupMemberList.stream()
-                .map(groupMember -> GroupMemberResponse.builder()
-                        .title(selectedGroup.getTitle())
-                        .description(selectedGroup.getDescription())
-                        .notes(groupMember.getNotes())
-                        .build())
+                .map(groupMember -> {
+                    String avatarImage = null;
+                    if (groupMember.getUser().getUserAbout() != null && groupMember.getUser().getUserAbout().getAvatar() != null) {
+                        avatarImage = groupMember.getUser().getUserAbout().getAvatar().getImageUrl();
+                    }
+                    return GroupMemberResponse.builder()
+                            .title(selectedGroup.getTitle())
+                            .description(selectedGroup.getDescription())
+                            .avatarImage(avatarImage)
+                            .notes(groupMember.getNotes())
+                            .build();
+                })
                 .toList();
     }
 

@@ -36,6 +36,22 @@ public class Photo implements Serializable {
     @JoinColumn(name = "user_post_id", referencedColumnName = "id")
     private UserPost userPost;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_about_background_id", referencedColumnName = "id")
+    private UserAbout background;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_about_avatar_id", referencedColumnName = "id")
+    private UserAbout avatar;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_about_profile_photo_id", referencedColumnName = "id")
+    private UserAbout profilePhoto;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "background_group_id", referencedColumnName = "id")
+    private Group backgroundGroup;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_post_id", referencedColumnName = "id")
     private GroupPost groupPost;

@@ -10,4 +10,5 @@ import lombok.*;
 public class GroupResponse {
     private String title;
     private String description;
+    private String background;
 }

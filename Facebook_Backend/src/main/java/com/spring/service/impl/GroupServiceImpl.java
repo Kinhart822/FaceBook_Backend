@@ -2,18 +2,14 @@ package com.spring.service.impl;
 
 import com.spring.dto.Request.Group.GroupRequest;
 import com.spring.dto.Response.Group.GroupResponse;
-import com.spring.entities.Group;
-import com.spring.entities.GroupMember;
-import com.spring.entities.Role;
-import com.spring.entities.User;
-import com.spring.repository.GroupMemberRepository;
-import com.spring.repository.GroupRepository;
-import com.spring.repository.RoleRepository;
-import com.spring.repository.UserRepository;
+import com.spring.dto.Response.Group.SearchGroupByTitleResponse;
+import com.spring.entities.*;
+import com.spring.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.spring.service.GroupService;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +26,9 @@ public class GroupServiceImpl implements GroupService{
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PhotoRepository photoRepository;
 
     @Override
     public GroupResponse createGroup(Integer userId, GroupRequest groupRequest) {
@@ -55,6 +54,16 @@ public class GroupServiceImpl implements GroupService{
                 .dateCreated(new Date())
                 .dateUpdated(new Date())
                 .build();
+
+        if (groupRequest.getBackgroundImageUrl() != null) {
+            Photo photo = new Photo();
+            photo.setUserId(userId);
+            photo.setImageUrl(groupRequest.getBackgroundImageUrl());
+            photo.setUploadDate(Instant.now());
+            photo.setBackgroundGroup(group);
+            photoRepository.save(photo);
+            group.setBackgroundGroup(photo);
+        }
         groupRepository.save(group);
 
         GroupMember addUserThatCreatedGroup = GroupMember.builder()
@@ -70,6 +79,7 @@ public class GroupServiceImpl implements GroupService{
         return GroupResponse.builder()
                 .title(groupRequest.getTitle())
                 .description(groupRequest.getDescription())
+                .background(groupRequest.getBackgroundImageUrl())
                 .build();
     }
 
@@ -80,6 +90,7 @@ public class GroupServiceImpl implements GroupService{
         return GroupResponse.builder()
                 .title(group.getTitle())
                 .description(group.getDescription())
+                .background(group.getBackgroundGroup()!= null? group.getBackgroundGroup().getImageUrl() : null)
                 .build();
     }
 
@@ -90,6 +101,7 @@ public class GroupServiceImpl implements GroupService{
                 .map(group -> GroupResponse.builder()
                         .title(group.getTitle())
                         .description(group.getDescription())
+                        .background(group.getBackgroundGroup()!= null? group.getBackgroundGroup().getImageUrl() : null)
                         .build())
                 .toList();
     }
@@ -100,21 +112,59 @@ public class GroupServiceImpl implements GroupService{
                 .orElseThrow(() -> new IllegalArgumentException("Group not found"));
 
         if (!group.getCreatedBy().getId().equals(userId)) {
-            throw new IllegalArgumentException("User not authorized to edit this comment");
+            throw new IllegalArgumentException("User not authorized to edit this group");
         }
 
         group.setTitle(groupRequest.getTitle());
         group.setDescription(groupRequest.getDescription());
+        if (groupRequest.getBackgroundImageUrl() != null) {
+            if (group.getBackgroundGroup() != null) {
+                photoRepository.deleteById(group.getBackgroundGroup().getId());
+            }
+            Photo photo = new Photo();
+            photo.setUserId(userId);
+            photo.setImageUrl(groupRequest.getBackgroundImageUrl());
+            photo.setUploadDate(Instant.now());
+            photo.setBackgroundGroup(group);
+            photoRepository.save(photo);
+            group.setBackgroundGroup(photo);
+        }
         groupRepository.save(group);
 
         return GroupResponse.builder()
                 .title(group.getTitle())
                 .description(group.getDescription())
+                .background(group.getBackgroundGroup() != null ? group.getBackgroundGroup().getImageUrl() : null)
                 .build();
     }
 
     @Override
     public void deleteGroup(Integer id) {
-        groupRepository.deleteById(id);
+        Group group = groupRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+
+        List<GroupMember> members = groupMemberRepository.findByGroupId(id);
+        for (GroupMember member : members) {
+            groupMemberRepository.delete(member);
+        }
+
+        if (group.getBackgroundGroup() != null) {
+            photoRepository.deleteById(group.getBackgroundGroup().getId());
+        }
+
+        groupRepository.delete(group);
     }
+
+    @Override
+    public List<SearchGroupByTitleResponse> getGroupByTitle(String title, Integer limit, Integer offset) {
+        List<Object[]> results = groupRepository.getAllGroupsByTitle(title, limit, offset);
+        return results.stream()
+                .map(result -> SearchGroupByTitleResponse.builder()
+                        .title((String) result[0])
+                        .description((String) result[1])
+                        .background(result[2] != null ? (String) result[2] : null)
+                        .build())
+                .toList();
+    }
+
 }

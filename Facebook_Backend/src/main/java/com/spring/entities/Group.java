@@ -41,7 +41,7 @@ public class Group {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateUpdated;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group", cascade = CascadeType.ALL)
     private List<GroupMember> groupMemberList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
@@ -49,4 +49,7 @@ public class Group {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
     private List<GroupPost> groupPostList;
+
+    @OneToOne(mappedBy = "backgroundGroup")
+    private Photo backgroundGroup;
 }

@@ -1,7 +1,5 @@
 package com.spring.dto.Response.User;
 
-import com.spring.enums.EducationLevel;
-import com.spring.enums.Gender;
 import lombok.*;
 
 import java.util.Date;
@@ -26,5 +24,7 @@ public class UserAboutResponse {
     private Date dateOfJoining;
     private String locationName;
     private String relationshipStatus;
-    private String imageUrl;
+    private String profilePhotoUrl;
+    private String avatarPhotoUrl;
+    private String backgroundUrl;
 }

@@ -12,12 +12,14 @@ import com.spring.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GroupPostImpl implements GroupPostService {
+public class GroupPostServiceImpl implements GroupPostService {
     @Autowired
     private GroupRepository groupRepository;
 
@@ -32,6 +34,12 @@ public class GroupPostImpl implements GroupPostService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private PhotoRepository photoRepository;
+
+    @Autowired
+    private VideoRepository videoRepository;
 
     @Override
     public GroupPostResponse addPost(Integer userId, GroupPostRequest groupPostRequest) {
@@ -53,14 +61,45 @@ public class GroupPostImpl implements GroupPostService {
         } else if (groupPostRequest.getPostStatus() == PostStatus.Published){
             newPost.setActionPerformed(ActionPerformed.CreatedPost);
         }
-        groupPostRepository.save(newPost);
+        newPost = groupPostRepository.save(newPost);
+
+        List<Photo> photos = new ArrayList<>();
+        if (groupPostRequest.getImageUrl() != null) {
+            for (String imageUrl : groupPostRequest.getImageUrl()) {
+                Photo photo = new Photo();
+                photo.setUserId(userId);
+                photo.setImageUrl(imageUrl);
+                photo.setUploadDate(Instant.now());
+                photo.setGroupPost(newPost);
+                photos.add(photo);
+                photoRepository.save(photo);
+            }
+        }
+        newPost.setPhotos(photos);
+
+        List<Video> videoList = new ArrayList<>();
+        if (groupPostRequest.getVideoUrl() != null) {
+            for (String videoUrl : groupPostRequest.getVideoUrl()) {
+                Video video = new Video();
+                video.setVideoUrl(videoUrl);
+                video.setCreatedBy(userId);
+                video.setDateCreated(Instant.now());
+                video.setGroupPost(newPost);
+                videoList.add(video);
+                videoRepository.save(video);
+            }
+        }
+        newPost.setVideoList(videoList);
 
         return GroupPostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
-                .content(groupPostRequest.getContent())
-                .postStatus(groupPostRequest.getPostStatus().toString())
+                .content(newPost.getMessage())
+                .imageUrl(groupPostRequest.getImageUrl())
+                .videoUrl(groupPostRequest.getVideoUrl())
+                .postStatus(newPost.getPostStatus().toString())
                 .actionPerformed(newPost.getActionPerformed().toString())
-                .build();    }
+                .build();
+    }
 
     @Override
     public GroupPostResponse editPost(Integer userId, GroupPostRequest groupPostRequest) {
@@ -82,10 +121,44 @@ public class GroupPostImpl implements GroupPostService {
         }
         groupPostRepository.save(existingPost);
 
+        photoRepository.deleteByGroupPost(existingPost);
+        List<Photo> photos = new ArrayList<>();
+        if (groupPostRequest.getImageUrl() != null) {
+            for (String imageUrl : groupPostRequest.getImageUrl()) {
+                Photo photo = new Photo();
+                photo.setUserId(userId);
+                photo.setImageUrl(imageUrl);
+                photo.setUploadDate(Instant.now());
+                photo.setGroupPost(existingPost);
+                photos.add(photo);
+                photoRepository.save(photo);
+            }
+        }
+        existingPost.setPhotos(photos);
+
+        videoRepository.deleteByGroupPost(existingPost);
+        List<Video> videoList = new ArrayList<>();
+        if (groupPostRequest.getVideoUrl()!= null) {
+            for (String videoUrl : groupPostRequest.getVideoUrl()) {
+                Video video = new Video();
+                video.setVideoUrl(videoUrl);
+                video.setCreatedBy(userId);
+                video.setUpdatedBy(userId);
+                video.setDateCreated(Instant.now());
+                video.setDateUpdated(Instant.now());
+                video.setGroupPost(existingPost);
+                videoList.add(video);
+                videoRepository.save(video);
+            }
+        }
+        existingPost.setVideoList(videoList);
+
         return GroupPostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
-                .content(groupPostRequest.getContent())
-                .postStatus(groupPostRequest.getPostStatus().toString())
+                .content(existingPost.getMessage())
+                .imageUrl(groupPostRequest.getImageUrl())
+                .videoUrl(groupPostRequest.getVideoUrl())
+                .postStatus(existingPost.getPostStatus().toString())
                 .actionPerformed(existingPost.getActionPerformed().toString())
                 .build();
     }
@@ -108,6 +181,8 @@ public class GroupPostImpl implements GroupPostService {
         return GroupPostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
                 .content(post.getMessage())
+                .imageUrl(post.getPhotos().stream().map(Photo::getImageUrl).toList())
+                .videoUrl(post.getVideoList().stream().map(Video::getVideoUrl).toList())
                 .postStatus(post.getPostStatus().toString())
                 .actionPerformed(post.getActionPerformed().toString())
                 .build();
@@ -122,6 +197,8 @@ public class GroupPostImpl implements GroupPostService {
                 .map(post -> GroupPostResponse.builder()
                         .name(user.getLastName() + " " + user.getFirstName())
                         .content(post.getMessage())
+                        .imageUrl(post.getPhotos().stream().map(Photo::getImageUrl).toList())
+                        .videoUrl(post.getVideoList().stream().map(Video::getVideoUrl).toList())
                         .postStatus(post.getPostStatus().toString())
                         .actionPerformed(post.getActionPerformed().toString())
                         .build()
@@ -138,6 +215,8 @@ public class GroupPostImpl implements GroupPostService {
                 .map(post -> GroupPostResponse.builder()
                         .name(user.getLastName() + " " + user.getFirstName())
                         .content(post.getMessage())
+                        .imageUrl(post.getPhotos().stream().map(Photo::getImageUrl).toList())
+                        .videoUrl(post.getVideoList().stream().map(Video::getVideoUrl).toList())
                         .postStatus(post.getPostStatus().toString())
                         .actionPerformed(post.getActionPerformed().toString())
                         .build()
@@ -167,7 +246,7 @@ public class GroupPostImpl implements GroupPostService {
             // cannot send it to yourself
             if (!post.getUser().getId().equals(userId)) {
                 String message = user.getLastName() + " " + user.getFirstName() + " liked your post!";
-                notificationService.sendNotification(userId, groupPostRequest.getPostId(), message);
+                notificationService.sendGroupNotification(userId, groupPostRequest.getPostId(), message);
                 return true; // Like
             }
 

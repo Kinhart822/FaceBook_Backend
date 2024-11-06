@@ -41,7 +41,13 @@ public class UserController {
     private UserPostService userPostService;
 
     @Autowired
+    private VideoPostService videoPostService;
+
+    @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping
     public ResponseEntity<String> sayHello(HttpServletRequest request) {
@@ -86,6 +92,8 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+
+
     // TODO: UserAbout and Location
     @GetMapping("/listUserAbout")
     public ResponseEntity<List<UserAboutResponse>> getAllUserAbout() {
@@ -105,13 +113,7 @@ public class UserController {
         UserAboutResponse userAboutResponse = userAboutService.save(userAboutRequest, userId);
         return new ResponseEntity<>(userAboutResponse, HttpStatus.CREATED);
     }
-
-    @DeleteMapping("/deleteUserAbout/{id}")
-    public ResponseEntity<String> deleteUserAbout(@PathVariable Integer id) {
-        userAboutService.deleteById(id);
-        return ResponseEntity.ok("Delete UserAbout Successfully");
-    }
-
+    
     // TODO: UserFollower
     @PostMapping("/follow")
     public ResponseEntity<String> followUser(@RequestBody UserFollowerRequest userFollowerRequest, HttpServletRequest request) {
@@ -283,6 +285,46 @@ public class UserController {
         return ResponseEntity.ok(posts);
     }
 
+    // TODO: VideoPost
+    @PostMapping("/videoPost/add")
+    public ResponseEntity<VideoPostResponse> addPost(@RequestBody VideoPostRequest videoPostRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        VideoPostResponse response = videoPostService.addPost(userId, videoPostRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/videoPost/edit")
+    public ResponseEntity<VideoPostResponse> editPost(@RequestBody VideoPostRequest videoPostRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        VideoPostResponse response = videoPostService.editPost(userId, videoPostRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/videoPost/delete")
+    public ResponseEntity<String> deletePost(@RequestBody VideoPostRequest videoPostRequest) {
+        videoPostService.deletePost(videoPostRequest);
+        return ResponseEntity.ok("Post deleted successfully");
+    }
+
+    @GetMapping("/videoPostById")
+    public ResponseEntity<VideoPostResponse> getPostById(@RequestBody VideoPostRequest videoPostRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        VideoPostResponse response = videoPostService.getPostById(userId, videoPostRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/videoPostsByUser")
+    public ResponseEntity<List<VideoPostResponse>> getVideoPosts(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<VideoPostResponse> posts = videoPostService.getVideoPosts(userId);
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/videoByVideoPostAndPostStatus")
+    public ResponseEntity<String> getImageUrls(@RequestBody VideoPostRequest videoPostRequest) {String post = videoPostService.getVideoUrlByVideoPostAndPostStatus(videoPostRequest);
+        return ResponseEntity.ok(post);
+    }
+
     //  TODO: Comment
     @PostMapping("/comment/add")
     public ResponseEntity<CommentResponse> addComment(@RequestBody CommentRequest commentRequest, HttpServletRequest request) {
@@ -317,6 +359,40 @@ public class UserController {
         return ResponseEntity.ok(comments);
     }
 
+    //  TODO: VideoComment
+    @PostMapping("/videoComment/add")
+    public ResponseEntity<CommentResponse> addVideoComment(@RequestBody CommentRequest commentRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        CommentResponse response = commentService.addVideoComment(userId, commentRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/videoComment/edit")
+    public ResponseEntity<CommentResponse> editVideoComment(@RequestBody CommentRequest commentRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        CommentResponse response = commentService.editComment(userId, commentRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/videoComment/delete/{commentId}")
+    public ResponseEntity<String> deleteVideoComment(@PathVariable Integer commentId) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.ok("Comment deleted successfully");
+    }
+
+    @GetMapping("/videoComments/getCommentByPost")
+    public ResponseEntity<List<CommentResponse>> getCommentsByVideoPostId(@RequestBody CommentRequest commentRequest) {
+        List<CommentResponse> comments = commentService.getCommentsByVideoPostId(commentRequest);
+        return ResponseEntity.ok(comments);
+    }
+
+    @GetMapping("/videoComments/getCommentByUser")
+    public ResponseEntity<List<CommentResponse>> getVideoCommentsByUserId(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<CommentResponse> comments = commentService.getCommentsByUserId(userId);
+        return ResponseEntity.ok(comments);
+    }
+
     // TODO: UserLikePost
     @PostMapping("/post/like")
     public ResponseEntity<String> likePost(@RequestBody PostRequest postRequest, HttpServletRequest request) {
@@ -330,5 +406,33 @@ public class UserController {
         List<UserResponse> usersWhoLiked = userPostService.getUsersWhoLikedPost(postRequest);
         return ResponseEntity.ok(usersWhoLiked);
     }
+
+    @PostMapping("/videoPost/like")
+    public ResponseEntity<String> likePost(@RequestBody VideoPostRequest videoPostRequest, HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        Boolean liked = videoPostService.likePost(userId, videoPostRequest);
+        return ResponseEntity.ok(liked ? "Post liked" : "Post unliked");
+    }
+
+    @GetMapping("/videoPost/viewUsersLike")
+    public ResponseEntity<List<UserResponse>> getUsersWhoLikedPost(@RequestBody VideoPostRequest videoPostRequest) {
+        List<UserResponse> usersWhoLiked = videoPostService.getUsersWhoLikedPost(videoPostRequest);
+        return ResponseEntity.ok(usersWhoLiked);
+    }
+
+    // TODO: Notifications
+    @GetMapping("/notifications/getNotificationsByUser")
+    public ResponseEntity<NotificationResponse> getNotificationsByUser(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        NotificationResponse notifications = notificationService.getNotificationsByUserId(userId);
+        return ResponseEntity.ok(notifications);
+    }
+
+    @PostMapping("/notifications/markAsRead")
+    public ResponseEntity<String> markNotificationAsRead(@RequestBody NotificationRequest notificationRequest) {
+        notificationService.markNotificationAsRead(notificationRequest);
+        return ResponseEntity.ok("Notification marked as read");
+    }
+
 }
 

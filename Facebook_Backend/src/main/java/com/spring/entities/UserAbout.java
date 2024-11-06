@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -46,11 +47,20 @@ public class UserAbout {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfJoining;
 
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "location_id")
     private Location location;
 
     @Column(name = "relation_ship", length = 50)
     private Relationship relationship;
+
+    @OneToOne(mappedBy = "background")
+    private Photo background;
+
+    @OneToOne(mappedBy = "avatar")
+    private Photo avatar;
+
+    @OneToOne(mappedBy = "profilePhoto")
+    private Photo profilePhoto;
 }
 

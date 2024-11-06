@@ -52,6 +52,10 @@ public class Video implements Serializable {
     @JoinColumn(name = "user_post_id", referencedColumnName = "id")
     private UserPost userPost;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "video_post_id", referencedColumnName = "id")
+    private VideoPost videoPost;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_post_id", referencedColumnName = "id")
     private GroupPost groupPost;

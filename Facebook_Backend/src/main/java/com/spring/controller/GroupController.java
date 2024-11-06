@@ -41,6 +41,17 @@ public class GroupController {
     @Autowired
     private CommentService commentService;
 
+    // TODO: Search
+    @GetMapping("/search-group-by-title")
+    public ResponseEntity<List<SearchGroupByTitleResponse>> searchGroupByTitle(
+            @RequestParam(required = false, name = "title") String title,
+            @RequestParam(required = false, name = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(required = false, name = "offset", defaultValue = "0") Integer offset
+    ) {
+        List<SearchGroupByTitleResponse> groupResponses = groupService.getGroupByTitle(title, limit, offset);
+        return ResponseEntity.ok(groupResponses);
+    }
+
     // TODO: Role
     @PostMapping("/role/add")
     public ResponseEntity<RoleResponse> addRole(@RequestBody RoleRequest roleRequest) {
