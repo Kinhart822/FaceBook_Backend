@@ -321,7 +321,8 @@ public class UserController {
     }
 
     @GetMapping("/videoByVideoPostAndPostStatus")
-    public ResponseEntity<String> getImageUrls(@RequestBody VideoPostRequest videoPostRequest) {String post = videoPostService.getVideoUrlByVideoPostAndPostStatus(videoPostRequest);
+    public ResponseEntity<String> getImageUrls(@RequestBody VideoPostRequest videoPostRequest) {
+        String post = videoPostService.getVideoUrlByVideoPostAndPostStatus(videoPostRequest);
         return ResponseEntity.ok(post);
     }
 

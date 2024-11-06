@@ -37,15 +37,6 @@ public class VideoPostServiceImpl implements VideoPostService {
     public VideoPostResponse addPost(Integer userId, VideoPostRequest videoPostRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        VideoPost newPost = new VideoPost();
-        newPost.setUser(user);
-        newPost.setPostStatus(videoPostRequest.getPostStatus());
-        newPost.setActionPerformed(videoPostRequest.getPostStatus() == PostStatus.Draft
-                ? ActionPerformed.CreatedDraftPost
-                : ActionPerformed.CreatedPost);
-
-
         Video video = new Video();
         video.setName(videoPostRequest.getName());
         video.setDescription(videoPostRequest.getDescription());
@@ -55,7 +46,14 @@ public class VideoPostServiceImpl implements VideoPostService {
         video.setUpdatedBy(userId);
         video.setDateCreated(Instant.now());
         video.setDateUpdated(Instant.now());
+        videoRepository.save(video);
 
+        VideoPost newPost = new VideoPost();
+        newPost.setUser(user);
+        newPost.setPostStatus(videoPostRequest.getPostStatus());
+        newPost.setActionPerformed(videoPostRequest.getPostStatus() == PostStatus.Draft
+                ? ActionPerformed.CreatedDraftPost
+                : ActionPerformed.CreatedPost);
         newPost.setVideo(video);
         newPost = videoPostRepository.save(newPost);
 
@@ -84,12 +82,17 @@ public class VideoPostServiceImpl implements VideoPostService {
             throw new IllegalArgumentException("Unauthorized edit attempt");
         }
 
-        existingPost.getVideo().setName(videoPostRequest.getName());
-        existingPost.getVideo().setDescription(videoPostRequest.getDescription());
-        existingPost.getVideo().setLength(videoPostRequest.getLength());
+        if (videoPostRequest.getName() != null) {
+            existingPost.getVideo().setName(videoPostRequest.getName());
+        }
+        if (videoPostRequest.getDescription() != null) {
+            existingPost.getVideo().setDescription(videoPostRequest.getDescription());
+        }
+        if (videoPostRequest.getLength() != null) {
+            existingPost.getVideo().setLength(videoPostRequest.getLength());
+        }
         existingPost.getVideo().setUpdatedBy(userId);
         existingPost.getVideo().setDateUpdated(Instant.now());
-
         if (videoPostRequest.getVideoUrl() != null) {
             existingPost.getVideo().setVideoUrl(videoPostRequest.getVideoUrl());
         }

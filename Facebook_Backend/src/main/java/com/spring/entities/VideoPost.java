@@ -7,9 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -35,7 +33,7 @@ public class VideoPost {
     @Enumerated(EnumType.ORDINAL)
     private PostStatus postStatus;
 
-    @OneToOne(mappedBy = "videoPost")
+    @OneToOne(mappedBy = "videoPost", cascade = CascadeType.ALL)
     private Video video;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "videoPost", cascade = CascadeType.ALL)
