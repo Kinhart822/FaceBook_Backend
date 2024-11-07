@@ -67,6 +67,9 @@ public class UserPostServiceImpl implements UserPostService {
 
         newPost.setPhotos(photos);
 
+        String message = user.getLastName() + " " + user.getFirstName() + " successfully created a new post!";
+        notificationService.sendNotification(userId, newPost.getId(), message);
+
         return PostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
                 .content(newPost.getContent())
@@ -114,6 +117,9 @@ public class UserPostServiceImpl implements UserPostService {
 
         existingPost.setPhotos(photos);
 
+        String message = user.getLastName() + " " + user.getFirstName() + " successfully updated post!";
+        notificationService.sendNotification(userId, existingPost.getId(), message);
+
         // Trả về PostResponse
         return PostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
@@ -125,9 +131,15 @@ public class UserPostServiceImpl implements UserPostService {
     }
 
     @Override
-    public void deletePost(PostRequest postRequest) {
+    public void deletePost(Integer userId, PostRequest postRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
         UserPost post = userPostRepository.findById(postRequest.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        String message = user.getLastName() + " " + user.getFirstName() + " successfully deleted post!";
+        notificationService.sendNotification(userId, post.getId(), message);
 
         userPostRepository.delete(post);
     }

@@ -60,6 +60,9 @@ public class VideoPostServiceImpl implements VideoPostService {
         video.setVideoPost(newPost);
         videoRepository.save(video);
 
+        String message = user.getLastName() + " " + user.getFirstName() + " successfully created a new video post!";
+        notificationService.sendNotification(userId, newPost.getId(), message);
+
         return VideoPostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
                 .content(video.getName())
@@ -106,6 +109,9 @@ public class VideoPostServiceImpl implements VideoPostService {
         videoPostRepository.save(existingPost);
         videoRepository.save(existingPost.getVideo());
 
+        String message = user.getLastName() + " " + user.getFirstName() + " successfully updated video post!";
+        notificationService.sendNotification(userId, existingPost.getId(), message);
+
         return VideoPostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
                 .content(existingPost.getVideo().getName())
@@ -118,9 +124,15 @@ public class VideoPostServiceImpl implements VideoPostService {
     }
 
     @Override
-    public void deletePost(VideoPostRequest videoPostRequest) {
+    public void deletePost(Integer userId, VideoPostRequest videoPostRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
         VideoPost post = videoPostRepository.findById(videoPostRequest.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        String message = user.getLastName() + " " + user.getFirstName() + " successfully deleted post!";
+        notificationService.sendNotification(userId, post.getId(), message);
 
         videoPostRepository.delete(post);
     }

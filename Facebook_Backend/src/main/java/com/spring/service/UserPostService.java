@@ -9,7 +9,7 @@ import java.util.List;
 public interface UserPostService {
     PostResponse addPost(Integer userId, PostRequest postRequest);
     PostResponse editPost(Integer userId, PostRequest postRequest);
-    void deletePost(PostRequest postRequest);
+    void deletePost(Integer userId, PostRequest postRequest);
     PostResponse getPostById(Integer userId, PostRequest postRequest);
     List<PostResponse> getUserPosts(Integer userId);
     Boolean likePost(Integer userId, PostRequest postRequest);
