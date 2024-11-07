@@ -91,6 +91,9 @@ public class GroupPostServiceImpl implements GroupPostService {
         }
         newPost.setVideoList(videoList);
 
+        String message = user.getLastName() + " " + user.getFirstName() + " successfully created a new group post!";
+        notificationService.sendNotification(userId, newPost.getId(), message);
+
         return GroupPostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
                 .content(newPost.getMessage())
@@ -153,6 +156,9 @@ public class GroupPostServiceImpl implements GroupPostService {
         }
         existingPost.setVideoList(videoList);
 
+        String message = user.getLastName() + " " + user.getFirstName() + " successfully updated group post!";
+        notificationService.sendNotification(userId, existingPost.getId(), message);
+
         return GroupPostResponse.builder()
                 .name(user.getLastName() + " " + user.getFirstName())
                 .content(existingPost.getMessage())
@@ -164,9 +170,15 @@ public class GroupPostServiceImpl implements GroupPostService {
     }
 
     @Override
-    public void deletePost(GroupPostRequest groupPostRequest) {
+    public void deletePost(Integer userId, GroupPostRequest groupPostRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
         GroupPost post = groupPostRepository.findById(groupPostRequest.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        String message = user.getLastName() + " " + user.getFirstName() + " successfully deleted post!";
+        notificationService.sendNotification(userId, post.getId(), message);
 
         groupPostRepository.delete(post);
     }

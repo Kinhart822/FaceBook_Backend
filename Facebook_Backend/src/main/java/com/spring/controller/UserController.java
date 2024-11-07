@@ -260,8 +260,9 @@ public class UserController {
     }
 
     @DeleteMapping("/post/delete")
-    public ResponseEntity<String> deletePost(@RequestBody PostRequest postRequest) {
-        userPostService.deletePost(postRequest);
+    public ResponseEntity<String> deletePost(HttpServletRequest request, @RequestBody PostRequest postRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        userPostService.deletePost(userId, postRequest);
         return ResponseEntity.ok("Post deleted successfully");
     }
 
@@ -301,8 +302,9 @@ public class UserController {
     }
 
     @DeleteMapping("/videoPost/delete")
-    public ResponseEntity<String> deletePost(@RequestBody VideoPostRequest videoPostRequest) {
-        videoPostService.deletePost(videoPostRequest);
+    public ResponseEntity<String> deletePost(HttpServletRequest request, @RequestBody VideoPostRequest videoPostRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        videoPostService.deletePost(userId, videoPostRequest);
         return ResponseEntity.ok("Post deleted successfully");
     }
 
