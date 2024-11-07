@@ -197,8 +197,9 @@ public class GroupController {
     }
 
     @DeleteMapping("/post/delete")
-    public ResponseEntity<String> deletePost(@RequestBody GroupPostRequest groupPostRequest) {
-        groupPostService.deletePost(groupPostRequest);
+    public ResponseEntity<String> deletePost(HttpServletRequest httpServletRequest, @RequestBody GroupPostRequest groupPostRequest) {
+        Integer userId = jwtUtil.getUserIdFromToken(httpServletRequest);
+        groupPostService.deletePost(userId, groupPostRequest);
         return ResponseEntity.ok("Post deleted successfully");
     }
 
