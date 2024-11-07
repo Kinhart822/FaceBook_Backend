@@ -30,8 +30,8 @@ public class PageController {
     }
     // list all page
     @GetMapping("/page")
-    public List<Page> getAllPage() {
-        return pageService.getAllPages();
+    public List<Page> getAllPage(@RequestParam(required = false) String name) {
+        return pageService.getAllPages(name);
     }
     // get a page
     @GetMapping("/page/{id}")
