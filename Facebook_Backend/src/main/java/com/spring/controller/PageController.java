@@ -11,7 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,9 +26,13 @@ public class PageController {
 
     // create a new page
     @PostMapping("/page")
-    public ResponseEntity<CommonResponse> createPage(@RequestBody PageRequest pageRequest, HttpServletRequest request) {
+    public ResponseEntity<CommonResponse> createPage(
+            @RequestParam("avatarImgFile") MultipartFile avatarImgFile,
+            @RequestPart("pageRequest") PageRequest pageRequest,
+            HttpServletRequest request) throws IOException {
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        return ResponseEntity.ok(pageService.createPage(userId, pageRequest));
+        byte[] avatarImg = avatarImgFile.getBytes();
+        return ResponseEntity.ok(pageService.createPage(userId, avatarImg, pageRequest));
     }
     // list all page
     @GetMapping("/page")
@@ -41,8 +47,11 @@ public class PageController {
     }
     // update a page
     @PutMapping("/page/{id}")
-    public ResponseEntity<CommonResponse> updatePage(@PathVariable Integer id, @RequestBody PageRequest pageRequest) {
-        return ResponseEntity.ok(pageService.updatePage(id, pageRequest));
+    public ResponseEntity<CommonResponse> updatePage(@PathVariable Integer id,
+                                                     @RequestParam("avatarImgFile") MultipartFile avatarImgFile,
+                                                     @RequestBody PageRequest pageRequest) throws IOException {
+        byte[] avatarImg = avatarImgFile.getBytes();
+        return ResponseEntity.ok(pageService.updatePage(id, avatarImg, pageRequest));
     }
     // delete a page
     @DeleteMapping("/page/{id}")
