@@ -27,12 +27,13 @@ public class PageController {
     // create a new page
     @PostMapping("/page")
     public ResponseEntity<CommonResponse> createPage(
-            @RequestPart("avatarImgFile") MultipartFile avatarImgFile,
+            @RequestPart(value = "avatarImgFile", required = false) MultipartFile avatarImgFile,
             @RequestPart("pageRequest") PageRequest pageRequest,
             HttpServletRequest request) throws IOException {
 //        Integer userId = jwtUtil.getUserIdFromToken(request);TODO:jwt
         Integer userId = 1;
-        byte[] avatarImg = avatarImgFile.getBytes();
+        byte[] avatarImg = avatarImgFile == null ? null : avatarImgFile.getBytes();
+        //toDO encode decode
         return ResponseEntity.ok(pageService.createPage(userId, avatarImg, pageRequest));
     }
     // list all page
