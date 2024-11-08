@@ -40,6 +40,9 @@ public class PageServiceImpl implements PageService {
         pageRepository.save(page);
         return CommonResponse.success();
     }
+    public List<Page> findAll() {
+        return pageRepository.findAll();
+    }
     public List<Page> getAllPages(String name) {
         return pageRepository.findAllByNameContains(name);
     }

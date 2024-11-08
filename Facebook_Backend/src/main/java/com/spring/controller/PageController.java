@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v2")
 @RequiredArgsConstructor
 public class PageController {
     private final PageService pageService;
@@ -31,6 +31,7 @@ public class PageController {
     // list all page
     @GetMapping("/page")
     public List<Page> getAllPage(@RequestParam(required = false) String name) {
+        if (name == null) return pageService.findAll();
         return pageService.getAllPages(name);
     }
     // get a page
