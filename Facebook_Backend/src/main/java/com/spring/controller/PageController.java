@@ -27,18 +27,19 @@ public class PageController {
     // create a new page
     @PostMapping("/page")
     public ResponseEntity<CommonResponse> createPage(
-            @RequestParam("avatarImgFile") MultipartFile avatarImgFile,
+            @RequestPart("avatarImgFile") MultipartFile avatarImgFile,
             @RequestPart("pageRequest") PageRequest pageRequest,
             HttpServletRequest request) throws IOException {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+//        Integer userId = jwtUtil.getUserIdFromToken(request);TODO:jwt
+        Integer userId = 1;
         byte[] avatarImg = avatarImgFile.getBytes();
         return ResponseEntity.ok(pageService.createPage(userId, avatarImg, pageRequest));
     }
     // list all page
     @GetMapping("/page")
-    public List<Page> getAllPage(@RequestParam(required = false) String name) {
+    public List<Page> findAllByNameContains(@RequestParam(required = false) String name) {
         if (name == null) return pageService.findAll();
-        return pageService.getAllPages(name);
+        return pageService.findAllByNameContains(name);
     }
     // get a page
     @GetMapping("/page/{id}")

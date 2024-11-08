@@ -10,7 +10,7 @@ import java.util.List;
 public interface PageService {
     CommonResponse createPage(Integer userId, byte[] avatarImg, PageRequest pageRequest);
     List<Page> findAll();
-    List<Page> getAllPages(String name);
+    List<Page> findAllByNameContains(String name);
     Page getPage(Integer id);
     CommonResponse updatePage(Integer id, byte[] avatarImg, PageRequest pageRequest);
     CommonResponse deletePage(Integer id);
