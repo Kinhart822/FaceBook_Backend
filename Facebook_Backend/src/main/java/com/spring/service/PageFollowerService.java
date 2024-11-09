@@ -1,6 +1,6 @@
 package com.spring.service;
 
-import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.response.CommonResponse;
 
 public interface PageFollowerService {
     CommonResponse followPage(Integer pageId, Integer userId);

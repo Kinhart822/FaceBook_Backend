@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.User.UserMessageRequest;
-import com.spring.dto.Response.User.UserMessageResponse;
+import com.spring.dto.response.User.UserMessageResponse;
 import com.spring.entities.User;
 import com.spring.entities.UserMessage;
 import com.spring.repository.UserMessageRepository;

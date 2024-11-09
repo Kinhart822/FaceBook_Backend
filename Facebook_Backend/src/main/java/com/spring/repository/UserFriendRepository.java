@@ -1,5 +1,6 @@
 package com.spring.repository;
 
+import com.spring.dto.response.UserProjectionNew;
 import com.spring.entities.UserFriend;
 import com.spring.enums.FriendRequestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,14 +22,16 @@ public interface UserFriendRepository extends JpaRepository<UserFriend, Integer>
     List<UserFriend> findByTargetUserIdAndFriendRequestStatus(@Param("targetId") Integer targetId, @Param("status") FriendRequestStatus status);
 
     @Query(nativeQuery = true, value = """
-        select *
+        select u.id                                   as userId,
+               u.avatar_b64                           as avatarB64,
+               concat(u.first_name, ' ', u.last_name) as fullname
         from users u
-        left join user_friend uf ON u.id = uf.source_id
+                 left join user_friend uf ON u.id = uf.source_id
         where u.id != :id
-            and not exists(
-                select 1
-                from user_friend uf
-                where uf.source_id = :id and uf.target_id = u.id
-            );""")
-    List<UserFriend> findStrangers(@Param("id") Integer userId);
+          and not exists(select 1
+                         from user_friend uf
+                         where uf.source_id = :id
+                           and uf.target_id = u.id)
+          and concat(u.first_name, ' ', u.last_name) like concat('%', :name, '%');""")
+    List<UserProjectionNew> findStrangers(@Param("id") Integer userId, @Param("name") String name);
 }

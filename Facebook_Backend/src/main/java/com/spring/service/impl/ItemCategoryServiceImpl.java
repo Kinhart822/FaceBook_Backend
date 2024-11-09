@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.ItemCategoryRequest;
-import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.response.CommonResponse;
 import com.spring.entities.ItemCategory;
 import com.spring.repository.ItemCategoryRepository;
 import com.spring.service.ItemCategoryService;

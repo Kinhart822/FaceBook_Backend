@@ -1,8 +1,8 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.Group.GroupRequest;
-import com.spring.dto.Response.Group.GroupResponse;
-import com.spring.dto.Response.Group.SearchGroupByTitleResponse;
+import com.spring.dto.response.Group.GroupResponse;
+import com.spring.dto.response.Group.SearchGroupByTitleResponse;
 import com.spring.entities.*;
 import com.spring.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;

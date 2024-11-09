@@ -2,13 +2,15 @@ package com.spring.controller;
 
 import com.spring.config.JwtUtil;
 import com.spring.dto.Request.User.*;
-import com.spring.dto.Response.User.*;
+import com.spring.dto.response.User.*;
+import com.spring.dto.response.UserProjectionNew;
 import com.spring.entities.User;
 import com.spring.enums.FriendRequestStatus;
+import com.spring.repository.UserRepository;
 import com.spring.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,36 +21,23 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
+    private final UserService userService;
+    private final UserAboutService userAboutService;
+    private final UserFollowerService userFollowerService;
+    private final UserMessageService userMessageService;
+    private final UserFriendService userFriendService;
+    private final UserPostService userPostService;
+    private final VideoPostService videoPostService;
+    private final CommentService commentService;
+    private final NotificationService notificationService;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserAboutService userAboutService;
-
-    @Autowired
-    private UserFollowerService userFollowerService;
-
-    @Autowired
-    private UserMessageService userMessageService;
-
-    @Autowired
-    private UserFriendService userFriendService;
-
-    @Autowired
-    private UserPostService userPostService;
-
-    @Autowired
-    private VideoPostService videoPostService;
-
-    @Autowired
-    private CommentService commentService;
-
-    @Autowired
-    private NotificationService notificationService;
-
+    @GetMapping("/profile")
+    private ResponseEntity<UserProjectionNew> getProfile(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        return ResponseEntity.ok(userRepository.getProfile(userId));
+    }
     @GetMapping
     public ResponseEntity<String> sayHello(HttpServletRequest request) {
         Integer userId = jwtUtil.getUserIdFromToken(request);
@@ -203,9 +192,11 @@ public class UserController {
 
     // TODO: UserFriend
     @GetMapping("/friend/stranger")
-    public ResponseEntity<List<UserFriendResponse>> getStranger(HttpServletRequest request) {
+    public ResponseEntity<List<UserProjectionNew>> getStranger(@RequestParam(required = false) String name,
+                                                               HttpServletRequest request) {
+        String newName = (name == null) ? "" : name;
         Integer userId = jwtUtil.getUserIdFromToken(request);
-        List<UserFriendResponse> strangers = userFriendService.getStrangers(userId);
+        List<UserProjectionNew> strangers = userFriendService.getStrangers(userId, newName);
         return ResponseEntity.ok(strangers);
     }
     @PostMapping("/friend/request")

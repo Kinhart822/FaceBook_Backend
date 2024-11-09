@@ -1,8 +1,8 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.User.VideoPostRequest;
-import com.spring.dto.Response.User.UserResponse;
-import com.spring.dto.Response.User.VideoPostResponse;
+import com.spring.dto.response.User.UserResponse;
+import com.spring.dto.response.User.VideoPostResponse;
 import com.spring.entities.*;
 import com.spring.enums.ActionPerformed;
 import com.spring.enums.PostStatus;

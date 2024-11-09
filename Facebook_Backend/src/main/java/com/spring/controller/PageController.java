@@ -2,8 +2,8 @@ package com.spring.controller;
 
 import com.spring.config.JwtUtil;
 import com.spring.dto.Request.PageRequest;
-import com.spring.dto.Response.CommonResponse;
-import com.spring.dto.Response.User.UserProjection;
+import com.spring.dto.response.CommonResponse;
+import com.spring.dto.response.User.UserProjection;
 import com.spring.entities.Page;
 import com.spring.service.PageService;
 import com.spring.service.impl.PageFollowerServiceImpl;
@@ -11,10 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 @RestController

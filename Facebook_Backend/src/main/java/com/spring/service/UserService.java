@@ -1,7 +1,7 @@
 package com.spring.service;
 
-import com.spring.dto.Response.User.SearchUserByNameResponse;
-import com.spring.dto.Response.User.SearchUserByUserNameResponse;
+import com.spring.dto.response.User.SearchUserByNameResponse;
+import com.spring.dto.response.User.SearchUserByUserNameResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;

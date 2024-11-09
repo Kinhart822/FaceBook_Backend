@@ -1,15 +1,14 @@
-package com.spring.dto.Response.User;
+
+package com.spring.dto.response.Group;
 
 import lombok.*;
-
-import java.util.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserMessageResponse {
+public class GroupMessageResponse {
     private String sourceName;
     private String content;
     private String targetName;

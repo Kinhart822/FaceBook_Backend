@@ -1,7 +1,8 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.User.UserFriendRequest;
-import com.spring.dto.Response.User.UserFriendResponse;
+import com.spring.dto.response.User.UserFriendResponse;
+import com.spring.dto.response.UserProjectionNew;
 import com.spring.entities.User;
 import com.spring.entities.UserFriend;
 import com.spring.enums.FriendRequestStatus;
@@ -107,8 +108,8 @@ public class UserFriendServiceImpl implements UserFriendService {
     }
 
     @Override
-    public List<UserFriendResponse> getStrangers(Integer userId) {
-        return List.of();
+    public List<UserProjectionNew> getStrangers(Integer userId, String name) {
+        return userFriendRepository.findStrangers(userId, name);
     }
 
 

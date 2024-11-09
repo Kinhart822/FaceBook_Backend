@@ -2,7 +2,7 @@ package com.spring.controller;
 
 import com.spring.config.JwtUtil;
 import com.spring.dto.Request.VideoRequest;
-import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.response.CommonResponse;
 import com.spring.entities.Video;
 import com.spring.service.VideoService;
 import jakarta.servlet.http.HttpServletRequest;

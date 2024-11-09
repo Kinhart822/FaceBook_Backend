@@ -1,7 +1,8 @@
 package com.spring.service;
 
 import com.spring.dto.Request.User.UserFriendRequest;
-import com.spring.dto.Response.User.UserFriendResponse;
+import com.spring.dto.response.User.UserFriendResponse;
+import com.spring.dto.response.UserProjectionNew;
 import com.spring.enums.FriendRequestStatus;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface UserFriendService {
     void acceptFriendRequest(Integer sourceId, Integer targetId);
     void declineFriendRequest(Integer sourceId,  Integer targetId);
     void removeFriend(Integer sourceId, UserFriendRequest userFriendRequest);
-    List<UserFriendResponse> getStrangers(Integer userId);
+    List<UserProjectionNew> getStrangers(Integer userId, String name);
     List<UserFriendResponse> getPendingFriendRequests(Integer targetId, FriendRequestStatus friendRequestStatus);
     List<UserFriendResponse> getAcceptedFriendRequests(Integer targetId, FriendRequestStatus friendRequestStatus);
 }

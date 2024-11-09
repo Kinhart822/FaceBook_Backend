@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.*;
-import com.spring.dto.Response.JwtAuthenticationResponse;
+import com.spring.dto.response.JwtAuthenticationResponse;
 import com.spring.entities.Token;
 import com.spring.entities.User;
 import com.spring.enums.Type;

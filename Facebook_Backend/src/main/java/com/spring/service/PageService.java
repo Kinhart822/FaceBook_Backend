@@ -1,8 +1,8 @@
 package com.spring.service;
 
 import com.spring.dto.Request.PageRequest;
-import com.spring.dto.Response.CommonResponse;
-import com.spring.dto.Response.User.UserProjection;
+import com.spring.dto.response.CommonResponse;
+import com.spring.dto.response.User.UserProjection;
 import com.spring.entities.Page;
 
 import java.util.List;

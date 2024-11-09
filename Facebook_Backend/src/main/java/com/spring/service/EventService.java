@@ -1,7 +1,7 @@
 package com.spring.service;
 
 import com.spring.dto.Request.EventRequest;
-import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.response.CommonResponse;
 import com.spring.entities.Event;
 
 import java.util.List;

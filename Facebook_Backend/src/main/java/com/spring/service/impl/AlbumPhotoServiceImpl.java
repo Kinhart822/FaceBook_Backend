@@ -1,6 +1,6 @@
 package com.spring.service.impl;
 
-import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.response.CommonResponse;
 import com.spring.entities.AlbumPhoto;
 import com.spring.entities.AlbumPhotoPK;
 import com.spring.repository.AlbumPhotoRepository;

@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.EventTypeRequest;
-import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.response.CommonResponse;
 import com.spring.entities.EventType;
 import com.spring.repository.EventTypeRepository;
 import com.spring.service.EventTypeService;

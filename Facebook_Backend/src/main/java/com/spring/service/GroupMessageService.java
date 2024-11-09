@@ -1,8 +1,8 @@
 package com.spring.service;
 
 import com.spring.dto.Request.Group.GroupMessageRequest;
-import com.spring.dto.Response.Group.GroupMessageResponse;
-import com.spring.entities.GroupMessage;
+import com.spring.dto.response.Group.GroupMessageResponse;
+
 import java.util.List;
 
 public interface GroupMessageService {

@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.MarketPlaceRequest;
-import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.response.CommonResponse;
 import com.spring.entities.MarketPlace;
 import com.spring.repository.MarketPlaceRepository;
 import com.spring.service.MarketPlaceService;

@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.PageCategoryRequest;
-import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.response.CommonResponse;
 import com.spring.entities.PageCategory;
 import com.spring.repository.PageCategoryRepository;
 import com.spring.service.PageCategoryService;

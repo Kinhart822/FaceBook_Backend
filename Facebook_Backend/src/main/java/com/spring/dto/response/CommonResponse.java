@@ -1,4 +1,4 @@
-package com.spring.dto.Response;
+package com.spring.dto.response;
 
 import com.spring.enums.ApiResponse;
 import lombok.AllArgsConstructor;

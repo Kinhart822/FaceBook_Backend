@@ -1,8 +1,8 @@
 package com.spring.service;
 
 import com.spring.dto.Request.User.VideoPostRequest;
-import com.spring.dto.Response.User.UserResponse;
-import com.spring.dto.Response.User.VideoPostResponse;
+import com.spring.dto.response.User.UserResponse;
+import com.spring.dto.response.User.VideoPostResponse;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.spring.service.impl;
 
-import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.response.CommonResponse;
 import com.spring.entities.PageFollower;
 import com.spring.entities.PageFollowerPK;
 import com.spring.repository.PageFollowerRepository;

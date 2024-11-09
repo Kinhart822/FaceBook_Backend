@@ -1,14 +1,10 @@
 package com.spring.service.impl;
 
-import com.spring.dto.Response.User.SearchUserByNameResponse;
-import com.spring.dto.Response.User.SearchUserByUserNameResponse;
+import com.spring.dto.response.User.SearchUserByNameResponse;
+import com.spring.dto.response.User.SearchUserByUserNameResponse;
 import com.spring.entities.User;
-import com.spring.enums.EducationLevel;
-import com.spring.enums.Gender;
-import com.spring.enums.Relationship;
 import com.spring.repository.UserRepository;
 import com.spring.service.UserService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

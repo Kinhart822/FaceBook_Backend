@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.User.UserAboutRequest;
-import com.spring.dto.Response.User.UserAboutResponse;
+import com.spring.dto.response.User.UserAboutResponse;
 import com.spring.entities.Location;
 import com.spring.entities.Photo;
 import com.spring.entities.UserAbout;

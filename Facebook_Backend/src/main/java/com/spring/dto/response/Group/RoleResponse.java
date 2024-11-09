@@ -1,4 +1,4 @@
-package com.spring.dto.Response.Group;
+package com.spring.dto.response.Group;
 
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.spring.dto.Response.Group;
+package com.spring.dto.response.User;
 
 import lombok.*;
 
@@ -9,11 +9,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GroupPostResponse {
+public class PostResponse {
     private String name;
     private String content;
     private List<String> imageUrl;
-    private List<String> videoUrl;
     private String postStatus;
     private String actionPerformed;
 }

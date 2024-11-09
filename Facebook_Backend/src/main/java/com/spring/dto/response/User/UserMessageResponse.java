@@ -1,5 +1,4 @@
-
-package com.spring.dto.Response.Group;
+package com.spring.dto.response.User;
 
 import lombok.*;
 
@@ -8,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GroupMessageResponse {
+public class UserMessageResponse {
     private String sourceName;
     private String content;
     private String targetName;

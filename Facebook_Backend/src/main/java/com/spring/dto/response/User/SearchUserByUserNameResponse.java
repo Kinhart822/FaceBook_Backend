@@ -1,16 +1,19 @@
-package com.spring.dto.Response.User;
+package com.spring.dto.response.User;
 
 import lombok.*;
+
+import java.util.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserResponse {
+public class SearchUserByUserNameResponse {
     private String firstName;
     private String lastName;
     private String email;
     private String phone;
-    private String gender;
+    private Date dateOfBirth;
+    private String userName;
 }

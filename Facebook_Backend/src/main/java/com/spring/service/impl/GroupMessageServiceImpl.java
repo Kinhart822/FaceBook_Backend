@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.Group.GroupMessageRequest;
-import com.spring.dto.Response.Group.GroupMessageResponse;
+import com.spring.dto.response.Group.GroupMessageResponse;
 import com.spring.entities.Group;
 import com.spring.entities.GroupMessage;
 import com.spring.entities.User;

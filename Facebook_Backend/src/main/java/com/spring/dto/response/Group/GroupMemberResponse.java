@@ -1,4 +1,4 @@
-package com.spring.dto.Response.Group;
+package com.spring.dto.response.Group;
 
 import lombok.*;
 
@@ -7,8 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GroupResponse {
+public class GroupMemberResponse {
     private String title;
     private String description;
-    private String background;
+    private String avatarImage;
+    private String notes;
 }

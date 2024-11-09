@@ -1,5 +1,7 @@
 package com.spring.repository;
 
+import com.spring.dto.response.User.UserProjection;
+import com.spring.dto.response.UserProjectionNew;
 import com.spring.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -71,4 +73,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             @Param("limit") Integer limit,
             @Param("offset") Integer offset
     );
+
+    @Query(nativeQuery = true, value = """
+            select u.id                              as userId,
+                   u.avatar_b64                      as avatarB64,
+                   concat(u.first_name, ' ', u.last_name) as fullname
+            from users u
+            where u.id = :id;""")
+    UserProjectionNew getProfile(@Param("id") Integer userId);
 }

@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.Group.RoleRequest;
-import com.spring.dto.Response.Group.RoleResponse;
+import com.spring.dto.response.Group.RoleResponse;
 import com.spring.entities.GroupMember;
 import com.spring.entities.Role;
 import com.spring.repository.GroupMemberRepository;

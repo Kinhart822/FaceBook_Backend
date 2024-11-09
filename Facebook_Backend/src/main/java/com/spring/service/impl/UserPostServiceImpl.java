@@ -1,8 +1,8 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.User.PostRequest;
-import com.spring.dto.Response.User.PostResponse;
-import com.spring.dto.Response.User.UserResponse;
+import com.spring.dto.response.User.PostResponse;
+import com.spring.dto.response.User.UserResponse;
 import com.spring.entities.*;
 import com.spring.enums.ActionPerformed;
 import com.spring.enums.PostStatus;

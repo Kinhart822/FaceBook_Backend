@@ -1,4 +1,4 @@
-package com.spring.dto.Response.User;
+package com.spring.dto.response.User;
 
 import lombok.*;
 

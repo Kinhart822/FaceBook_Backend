@@ -2,7 +2,7 @@ package com.spring.controller;
 
 import com.spring.config.JwtUtil;
 import com.spring.dto.Request.PhotoRequest;
-import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.response.CommonResponse;
 import com.spring.entities.Photo;
 import com.spring.service.PhotoService;
 import jakarta.servlet.http.HttpServletRequest;

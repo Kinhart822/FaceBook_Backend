@@ -1,7 +1,7 @@
 package com.spring.service;
 
 import com.spring.dto.Request.User.CommentRequest;
-import com.spring.dto.Response.User.CommentResponse;
+import com.spring.dto.response.User.CommentResponse;
 
 import java.util.List;
 

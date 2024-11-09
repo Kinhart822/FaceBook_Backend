@@ -1,7 +1,7 @@
 package com.spring.service.impl;
 
 import com.spring.dto.Request.User.NotificationRequest;
-import com.spring.dto.Response.User.NotificationResponse;
+import com.spring.dto.response.User.NotificationResponse;
 import com.spring.entities.*;
 import com.spring.repository.*;
 import com.spring.service.NotificationService;
