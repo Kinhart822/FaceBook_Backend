@@ -27,8 +27,10 @@ public class PageServiceImpl implements PageService {
     }
 
     public CommonResponse createPage(Integer userId, PageRequest pageRequest) {
+        System.out.println("begin create");
         Page page = new Page();
         page.setName(pageRequest.getName());
+        page.setDescription(pageRequest.getDescription());
         page.setCategoryId(pageRequest.getCategoryId());
         page.setOwnedBy(userId);
         page.setAvatarUrl(pageRequest.getAvatarUrl());
@@ -37,10 +39,15 @@ public class PageServiceImpl implements PageService {
         page.setMobile(pageRequest.getMobile());
         page.setEmail(pageRequest.getEmail());
         page.setInstagram(pageRequest.getInstagram());
+        page.setAvatarB64(pageRequest.getAvatarB64());
         pageRepository.save(page);
+        System.out.println("end create");
         return CommonResponse.success();
     }
-    public List<Page> getAllPages(String name) {
+    public List<Page> findAll() {
+        return pageRepository.findAll();
+    }
+    public List<Page> findAllByNameContains(String name) {
         return pageRepository.findAllByNameContains(name);
     }
     public Page getPage(Integer id) {
@@ -49,6 +56,7 @@ public class PageServiceImpl implements PageService {
     public CommonResponse updatePage(Integer id, PageRequest pageRequest) {
         Page page = this.findById(id);
         page.setName(pageRequest.getName());
+        page.setDescription(pageRequest.getDescription());
         page.setCategoryId(pageRequest.getCategoryId());
         page.setAvatarUrl(pageRequest.getAvatarUrl());
         page.setBackgroundUrl(pageRequest.getBackgroundUrl());
@@ -56,6 +64,7 @@ public class PageServiceImpl implements PageService {
         page.setMobile(pageRequest.getMobile());
         page.setEmail(pageRequest.getEmail());
         page.setInstagram(pageRequest.getInstagram());
+        page.setAvatarB64(pageRequest.getAvatarB64());
         pageRepository.save(page);
         return CommonResponse.success();
     }

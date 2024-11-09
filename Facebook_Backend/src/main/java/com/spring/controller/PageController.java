@@ -11,7 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -24,14 +27,17 @@ public class PageController {
 
     // create a new page
     @PostMapping("/page")
-    public ResponseEntity<CommonResponse> createPage(@RequestBody PageRequest pageRequest, HttpServletRequest request) {
-        Integer userId = jwtUtil.getUserIdFromToken(request);
+    public ResponseEntity<CommonResponse> createPage(
+            @RequestBody PageRequest pageRequest,
+            HttpServletRequest request) throws IOException {
+//        Integer userId = jwtUtil.getUserIdFromToken(request);TODO:jwt
+        Integer userId = 1;
         return ResponseEntity.ok(pageService.createPage(userId, pageRequest));
     }
     // list all page
     @GetMapping("/page")
-    public List<Page> getAllPage(@RequestParam(required = false) String name) {
-        return pageService.getAllPages(name);
+    public List<Page> findAllByNameContains(@RequestParam(required = false) String name) {
+        return (name == null) ? pageService.findAll() : pageService.findAllByNameContains(name);
     }
     // get a page
     @GetMapping("/page/{id}")
@@ -40,7 +46,8 @@ public class PageController {
     }
     // update a page
     @PutMapping("/page/{id}")
-    public ResponseEntity<CommonResponse> updatePage(@PathVariable Integer id, @RequestBody PageRequest pageRequest) {
+    public ResponseEntity<CommonResponse> updatePage(@PathVariable Integer id,
+                                                     @RequestBody PageRequest pageRequest) throws IOException {
         return ResponseEntity.ok(pageService.updatePage(id, pageRequest));
     }
     // delete a page

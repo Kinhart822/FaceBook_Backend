@@ -19,6 +19,8 @@ public class Page implements Serializable {
     private Integer id;
     @Column(name = "name")
     private String name;
+    @Column(name = "description")
+    private String description;
     @Column(name = "category_id")
     private Integer categoryId;
     @Column(name = "owned_by")
@@ -35,4 +37,6 @@ public class Page implements Serializable {
     private String email;
     @Column(name = "instagram")
     private String instagram;
+    @Column(name = "avatar_b64", columnDefinition = "MEDIUMTEXT")
+    private String avatarB64;
 }
