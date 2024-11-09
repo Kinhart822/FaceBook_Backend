@@ -202,6 +202,12 @@ public class UserController {
     }
 
     // TODO: UserFriend
+    @GetMapping("/friend/stranger")
+    public ResponseEntity<List<UserFriendResponse>> getStranger(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        List<UserFriendResponse> strangers = userFriendService.getStrangers(userId);
+        return ResponseEntity.ok(strangers);
+    }
     @PostMapping("/friend/request")
     public ResponseEntity<String> sendFriendRequest(@RequestBody UserFriendRequest userFriendRequest, HttpServletRequest request) {
         Integer sourceId = jwtUtil.getUserIdFromToken(request);

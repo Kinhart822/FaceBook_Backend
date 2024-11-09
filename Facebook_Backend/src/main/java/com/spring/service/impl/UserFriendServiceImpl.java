@@ -106,6 +106,11 @@ public class UserFriendServiceImpl implements UserFriendService {
         userFriendRepository.delete(friendship);
     }
 
+    @Override
+    public List<UserFriendResponse> getStrangers(Integer userId) {
+        return List.of();
+    }
+
 
     @Override
     public List<UserFriendResponse> getPendingFriendRequests(Integer targetId, FriendRequestStatus friendRequestStatus) {

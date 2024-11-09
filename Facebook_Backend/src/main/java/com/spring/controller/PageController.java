@@ -30,8 +30,7 @@ public class PageController {
     public ResponseEntity<CommonResponse> createPage(
             @RequestBody PageRequest pageRequest,
             HttpServletRequest request) throws IOException {
-//        Integer userId = jwtUtil.getUserIdFromToken(request);TODO:jwt
-        Integer userId = 1;
+        Integer userId = jwtUtil.getUserIdFromToken(request);
         return ResponseEntity.ok(pageService.createPage(userId, pageRequest));
     }
     // list all page

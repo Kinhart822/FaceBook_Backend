@@ -25,6 +25,8 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "avatar_b64")
+    private String avatarB64;
 
     @Column(name = "First_Name", length = 50)
     private String firstName;

@@ -11,6 +11,7 @@ public interface UserFriendService {
     void acceptFriendRequest(Integer sourceId, Integer targetId);
     void declineFriendRequest(Integer sourceId,  Integer targetId);
     void removeFriend(Integer sourceId, UserFriendRequest userFriendRequest);
+    List<UserFriendResponse> getStrangers(Integer userId);
     List<UserFriendResponse> getPendingFriendRequests(Integer targetId, FriendRequestStatus friendRequestStatus);
     List<UserFriendResponse> getAcceptedFriendRequests(Integer targetId, FriendRequestStatus friendRequestStatus);
 }

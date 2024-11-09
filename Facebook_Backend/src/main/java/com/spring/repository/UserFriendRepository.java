@@ -19,4 +19,16 @@ public interface UserFriendRepository extends JpaRepository<UserFriend, Integer>
 
     @Query("SELECT uf FROM UserFriend uf WHERE uf.targetUser.id = :targetId AND uf.status = :status")
     List<UserFriend> findByTargetUserIdAndFriendRequestStatus(@Param("targetId") Integer targetId, @Param("status") FriendRequestStatus status);
+
+    @Query(nativeQuery = true, value = """
+        select *
+        from users u
+        left join user_friend uf ON u.id = uf.source_id
+        where u.id != :id
+            and not exists(
+                select 1
+                from user_friend uf
+                where uf.source_id = :id and uf.target_id = u.id
+            );""")
+    List<UserFriend> findStrangers(@Param("id") Integer userId);
 }
