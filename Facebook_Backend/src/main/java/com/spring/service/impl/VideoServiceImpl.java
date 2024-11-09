@@ -2,6 +2,7 @@ package com.spring.service.impl;
 
 import com.spring.dto.Request.VideoRequest;
 import com.spring.dto.response.CommonResponse;
+import com.spring.dto.response.User.VideoResponse;
 import com.spring.entities.Video;
 import com.spring.repository.VideoRepository;
 import com.spring.service.VideoService;
@@ -39,14 +40,25 @@ public class VideoServiceImpl implements VideoService {
         return CommonResponse.success();
     }
 
-    public List<Video> getAllVideos() {
-        return videoRepository.findAll();
-    }
+    public List<VideoResponse> getAllVideos() {
+        List<Video> videoList = videoRepository.findAll();
 
+        return videoList.stream()
+                .map(video -> VideoResponse.builder()
+                        .name(video.getName())
+                        .description(video.getDescription())
+                        .videoUrl(video.getVideoUrl())
+                        .build()
+                )
+                .toList();
+        }
+
+    @Override
     public Video getVideo(Integer id) {
         return this.findById(id);
     }
 
+    @Override
     public CommonResponse updateVideo(Integer id, Integer userId, VideoRequest videoRequest) {
         Video video = this.findById(id);
         video.setName(videoRequest.getName());
@@ -59,9 +71,9 @@ public class VideoServiceImpl implements VideoService {
         return CommonResponse.success();
     }
 
+    @Override
     public CommonResponse deleteVideo(Integer id) {
         Video video = this.findById(id);
         videoRepository.delete(video);
-        return CommonResponse.success();
-    }
+        return CommonResponse.success();    }
 }

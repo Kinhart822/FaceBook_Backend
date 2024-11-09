@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetailsService userDetailsService(){
-        return new UserDetailsService(){
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsService() {
             @Override
             public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String email) {
                 User user = userRepository.findByEmail(email)
@@ -54,11 +54,12 @@ public class UserServiceImpl implements UserService {
                 .map(result -> new SearchUserByUserNameResponse(
                         (String) result[0],     // firstName
                         (String) result[1],     // lastName
-                        (String) result[2],     // email
-                        (String) result[3],     // phone
-                        (Date) result[4],       // dateOfBirth
-                        (String) result[5]      // userName
-                ))
+                        (String) result[2],    // userName
+                        (String) result[3],     // email
+                        (String) result[4],     // phone
+                        (Date) result[5],       // dateOfBirth
+                        (String) result[6])     // Image
+                )
                 .collect(Collectors.toList());
     }
 
@@ -73,7 +74,8 @@ public class UserServiceImpl implements UserService {
                         (String) result[1],     // lastName
                         (String) result[2],     // email
                         (String) result[3],     // phone
-                        (Date) result[4]        // dateOfBirth
+                        (Date) result[4],      // dateOfBirth
+                        (String) result[5]    // Image
                 ))
                 .collect(Collectors.toList());
     }
@@ -89,8 +91,30 @@ public class UserServiceImpl implements UserService {
                         (String) result[1],     // lastName
                         (String) result[2],     // email
                         (String) result[3],     // phone
-                        (Date) result[4]        // dateOfBirth
+                        (Date) result[4],        // dateOfBirth
+                        (String) result[5]    // Image
                 ))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<SearchUserByUserNameResponse> getAllUsers() {
+        List<User> results = userRepository.findAll();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        return results.stream().map(user -> {
+            String imageUrl = user.getUserAbout().getProfilePhoto().getImageUrl() != null ? user.getUserAbout().getProfilePhoto().getImageUrl() : null;
+
+            return SearchUserByUserNameResponse.builder()
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .userName(user.getUserAbout().getUserName())
+                    .email(user.getEmail())
+                    .phone(user.getPhoneNumber())
+                    .dateOfBirth(user.getDateOfBirth())
+                    .imageUrl(imageUrl)
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
 }

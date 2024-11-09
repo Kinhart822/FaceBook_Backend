@@ -12,5 +12,6 @@ public class PostRequest {
     private Integer postId;
     private String content;
     private List<String> imageUrl;
+    private List<String> videoUrl;
     private PostStatus postStatus;
 }

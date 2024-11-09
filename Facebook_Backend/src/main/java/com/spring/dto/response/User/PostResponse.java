@@ -13,6 +13,7 @@ public class PostResponse {
     private String name;
     private String content;
     private List<String> imageUrl;
+    private List<String> videoUrl;
     private String postStatus;
     private String actionPerformed;
 }

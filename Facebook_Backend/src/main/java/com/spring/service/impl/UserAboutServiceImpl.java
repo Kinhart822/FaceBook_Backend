@@ -4,6 +4,7 @@ import com.spring.dto.Request.User.UserAboutRequest;
 import com.spring.dto.response.User.UserAboutResponse;
 import com.spring.entities.Location;
 import com.spring.entities.Photo;
+import com.spring.entities.User;
 import com.spring.entities.UserAbout;
 import com.spring.repository.LocationRepository;
 import com.spring.repository.PhotoRepository;
@@ -47,7 +48,8 @@ public class UserAboutServiceImpl implements UserAboutService {
                 .school(userAbout.getSchool())
                 .dateOfJoining(userAbout.getDateOfJoining())
                 .locationName(userAbout.getLocation() != null
-                        ? userAbout.getLocation().getCity() + ", " + userAbout.getLocation().getCountry()
+                        ? userAbout.getLocation().getCity() + ", " + userAbout.getLocation().getCountry() + ", " + userAbout.getLocation().getStreet()
+                        + ", " + userAbout.getLocation().getState() + ", " + userAbout.getLocation().getRegion()
                         : null)
                 .relationshipStatus(userAbout.getRelationship() != null ? userAbout.getRelationship().toString() : null)
                 .backgroundUrl(userAbout.getBackground() != null ? userAbout.getBackground().getImageUrl() : null)
@@ -68,6 +70,12 @@ public class UserAboutServiceImpl implements UserAboutService {
     public UserAboutResponse findById(Integer id) {
         UserAbout userAbout = userAboutRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("UserAbout not found with id: " + id));
+        return mapToResponse(userAbout);
+    }
+
+    @Override
+    public UserAboutResponse findByUser(Integer userId) {
+        UserAbout userAbout = userAboutRepository.findByUserId(userId);
         return mapToResponse(userAbout);
     }
 
@@ -135,11 +143,6 @@ public class UserAboutServiceImpl implements UserAboutService {
                 newLocation.setDateUpdated(new Date());
                 Location savedLocation = locationRepository.save(newLocation);
                 userAbout.setLocation(savedLocation);
-            } else {
-                if (userAbout.getLocation() != null) {
-                    locationRepository.deleteById(userAbout.getLocation().getId());
-                    userAbout.setLocation(null);
-                }
             }
         }
         if (userAboutRequest.getBackgroundUrl() != null) {
