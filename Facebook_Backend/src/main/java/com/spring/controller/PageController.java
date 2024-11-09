@@ -18,7 +18,7 @@ import java.util.Base64;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v2")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class PageController {
     private final PageService pageService;

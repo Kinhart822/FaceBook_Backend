@@ -53,7 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user").hasAuthority(Type.USER.name())
                         .requestMatchers("/api/v1/user/**").permitAll()
                         .requestMatchers("/api/v1/group/**").permitAll()
-                        .requestMatchers("/api/v2/**").permitAll()
+//                        .requestMatchers("/api/v2/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
