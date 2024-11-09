@@ -92,7 +92,11 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-
+    @GetMapping("/findAllUsers")
+    public ResponseEntity<List<SearchUserByUserNameResponse>> getUsers() {
+        List<SearchUserByUserNameResponse> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
 
     // TODO: UserAbout and Location
     @GetMapping("/listUserAbout")
@@ -105,6 +109,13 @@ public class UserController {
     public ResponseEntity<UserAboutResponse> getUserAboutById(@PathVariable Integer id) {
         UserAboutResponse userAbout = userAboutService.findById(id);
         return ResponseEntity.ok(userAbout);
+    }
+
+    @GetMapping("/userAboutByUser")
+    public ResponseEntity<UserAboutResponse> getUserAboutByUser(HttpServletRequest request) {
+        Integer userId = jwtUtil.getUserIdFromToken(request);
+        UserAboutResponse userAboutResponse = userAboutService.findByUser(userId);
+        return ResponseEntity.ok(userAboutResponse);
     }
 
     @PostMapping("/createUserAbout")

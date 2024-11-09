@@ -12,8 +12,9 @@ import java.util.Date;
 public class SearchUserByUserNameResponse {
     private String firstName;
     private String lastName;
+    private String userName;
     private String email;
     private String phone;
     private Date dateOfBirth;
-    private String userName;
+    private String imageUrl;
 }

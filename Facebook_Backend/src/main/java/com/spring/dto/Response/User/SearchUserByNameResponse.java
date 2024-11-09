@@ -15,4 +15,5 @@ public class SearchUserByNameResponse {
     private String email;
     private String phone;
     private Date dateOfBirth;
+    private String imageUrl;
 }

@@ -3,6 +3,7 @@ package com.spring.controller;
 import com.spring.config.JwtUtil;
 import com.spring.dto.Request.VideoRequest;
 import com.spring.dto.Response.CommonResponse;
+import com.spring.dto.Response.User.VideoResponse;
 import com.spring.entities.Video;
 import com.spring.service.VideoService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,8 +27,8 @@ public class VideoController {
     }
 
     @GetMapping("/video")
-    public List<Video> getAllVideos() {
-        return videoService.getAllVideos();
+    public ResponseEntity<List<VideoResponse>> getAllVideos() {
+        return ResponseEntity.ok(videoService.getAllVideos());
     }
 
     @GetMapping("/video/{id}")

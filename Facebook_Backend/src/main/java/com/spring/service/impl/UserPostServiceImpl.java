@@ -35,6 +35,9 @@ public class UserPostServiceImpl implements UserPostService {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private VideoRepository videoRepository;
+
     @Override
     public PostResponse addPost(Integer userId, PostRequest postRequest) {
         User user = userRepository.findById(userId)
@@ -67,6 +70,23 @@ public class UserPostServiceImpl implements UserPostService {
 
         newPost.setPhotos(photos);
 
+        List<Video> videoList = new ArrayList<>();
+        if (postRequest.getVideoUrl() != null) {
+            for (String videoUrl : postRequest.getVideoUrl()) {
+                Video video = new Video();
+                video.setCreatedBy(userId);
+                video.setUpdatedBy(userId);
+                video.setVideoUrl(videoUrl);
+                video.setDateCreated(Instant.now());
+                video.setDateUpdated(Instant.now());
+                video.setUserPost(newPost);
+                videoList.add(video);
+                videoRepository.save(video);
+            }
+        }
+
+        newPost.setVideoList(videoList);
+
         String message = user.getLastName() + " " + user.getFirstName() + " successfully created a new post!";
         notificationService.sendNotification(userId, newPost.getId(), message);
 
@@ -74,6 +94,7 @@ public class UserPostServiceImpl implements UserPostService {
                 .name(user.getLastName() + " " + user.getFirstName())
                 .content(newPost.getContent())
                 .imageUrl(postRequest.getImageUrl())
+                .videoUrl(postRequest.getVideoUrl())
                 .postStatus(newPost.getPostStatus().toString())
                 .actionPerformed(newPost.getActionPerformed().toString())
                 .build();
