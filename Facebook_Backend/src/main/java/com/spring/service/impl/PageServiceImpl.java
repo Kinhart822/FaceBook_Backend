@@ -26,7 +26,7 @@ public class PageServiceImpl implements PageService {
                 () -> new RuntimeException(CommonResponse.entityNotFound().toString()));
     }
 
-    public CommonResponse createPage(Integer userId, byte[] avatarImg, PageRequest pageRequest) {
+    public CommonResponse createPage(Integer userId, PageRequest pageRequest) {
         System.out.println("begin create");
         Page page = new Page();
         page.setName(pageRequest.getName());
@@ -39,7 +39,7 @@ public class PageServiceImpl implements PageService {
         page.setMobile(pageRequest.getMobile());
         page.setEmail(pageRequest.getEmail());
         page.setInstagram(pageRequest.getInstagram());
-        page.setAvatarImg(avatarImg);
+        page.setAvatarB64(pageRequest.getAvatarB64());
         pageRepository.save(page);
         System.out.println("end create");
         return CommonResponse.success();
@@ -53,7 +53,7 @@ public class PageServiceImpl implements PageService {
     public Page getPage(Integer id) {
         return this.findById(id);
     }
-    public CommonResponse updatePage(Integer id, byte[] avatarImg, PageRequest pageRequest) {
+    public CommonResponse updatePage(Integer id, PageRequest pageRequest) {
         Page page = this.findById(id);
         page.setName(pageRequest.getName());
         page.setDescription(pageRequest.getDescription());
@@ -64,7 +64,7 @@ public class PageServiceImpl implements PageService {
         page.setMobile(pageRequest.getMobile());
         page.setEmail(pageRequest.getEmail());
         page.setInstagram(pageRequest.getInstagram());
-        page.setAvatarImg(avatarImg);
+        page.setAvatarB64(pageRequest.getAvatarB64());
         pageRepository.save(page);
         return CommonResponse.success();
     }

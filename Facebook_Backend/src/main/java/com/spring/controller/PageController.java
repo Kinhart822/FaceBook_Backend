@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -27,20 +28,16 @@ public class PageController {
     // create a new page
     @PostMapping("/page")
     public ResponseEntity<CommonResponse> createPage(
-            @RequestPart(value = "avatarImgFile", required = false) MultipartFile avatarImgFile,
-            @RequestPart("pageRequest") PageRequest pageRequest,
+            @RequestBody PageRequest pageRequest,
             HttpServletRequest request) throws IOException {
 //        Integer userId = jwtUtil.getUserIdFromToken(request);TODO:jwt
         Integer userId = 1;
-        byte[] avatarImg = avatarImgFile == null ? null : avatarImgFile.getBytes();
-        //toDO encode decode
-        return ResponseEntity.ok(pageService.createPage(userId, avatarImg, pageRequest));
+        return ResponseEntity.ok(pageService.createPage(userId, pageRequest));
     }
     // list all page
     @GetMapping("/page")
     public List<Page> findAllByNameContains(@RequestParam(required = false) String name) {
-        if (name == null) return pageService.findAll();
-        return pageService.findAllByNameContains(name);
+        return (name == null) ? pageService.findAll() : pageService.findAllByNameContains(name);
     }
     // get a page
     @GetMapping("/page/{id}")
@@ -50,10 +47,8 @@ public class PageController {
     // update a page
     @PutMapping("/page/{id}")
     public ResponseEntity<CommonResponse> updatePage(@PathVariable Integer id,
-                                                     @RequestParam("avatarImgFile") MultipartFile avatarImgFile,
                                                      @RequestBody PageRequest pageRequest) throws IOException {
-        byte[] avatarImg = avatarImgFile.getBytes();
-        return ResponseEntity.ok(pageService.updatePage(id, avatarImg, pageRequest));
+        return ResponseEntity.ok(pageService.updatePage(id, pageRequest));
     }
     // delete a page
     @DeleteMapping("/page/{id}")

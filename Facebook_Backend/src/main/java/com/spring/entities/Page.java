@@ -37,7 +37,6 @@ public class Page implements Serializable {
     private String email;
     @Column(name = "instagram")
     private String instagram;
-    @Lob
-    @Column(name = "avatarImg", columnDefinition = "MEDIUMBLOB")
-    private byte[] avatarImg;
+    @Column(name = "avatar_b64", columnDefinition = "MEDIUMTEXT")
+    private String avatarB64;
 }

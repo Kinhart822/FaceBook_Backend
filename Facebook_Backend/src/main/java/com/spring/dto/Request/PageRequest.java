@@ -13,4 +13,5 @@ public class PageRequest {
     private String mobile;
     private String email;
     private String instagram;
+    private String avatarB64;
 }
